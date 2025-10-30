@@ -4,9 +4,11 @@ import MainLayout from './layout/MainLayout';
 import HomePage from './pages/HomePage';
 import CantariaPage from './pages/CantariaPage';
 
+const repoName = '/nwcalculator/';
+
 function App() {
   return (
-    <BrowserRouter>
+   <BrowserRouter basename={repoName}>
       <Routes>
         <Route element={<MainLayout />}>
           <Route index element={<HomePage />} />
