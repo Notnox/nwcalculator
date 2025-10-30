@@ -1,0 +1,57 @@
+# .github/workflows/deploy.yml
+
+name: Deploy to GitHub Pages
+
+on:
+  # Roda este workflow toda vez que você der um 'push' na branch 'main'
+  push:
+    branches: [ main ] # (Mude para 'master' se for o caso)
+  
+  # Permite que você rode manualmente pela aba "Actions" no GitHub
+  workflow_dispatch:
+
+# Configura as permissões para o token do GitHub
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20 # (Usa a versão do Node que estamos trabalhando)
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        # Roda o script de build que configuramos
+        run: npm run build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        # Salva os arquivos da pasta 'dist' (o site pronto)
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist'
+
+  deploy:
+    # Este job só roda depois que o 'build' foi bem-sucedido
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
