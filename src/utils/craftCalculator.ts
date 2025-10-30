@@ -1,5 +1,5 @@
 // src/utils/craftCalculator.ts
-import { recipeMap, type Recipe, type Ingredient } from '../data/cantariaData';
+import { recipeMap, type Recipe } from '../data/cantariaData';
 
 // Interface para descrever o objeto de 'requirements'
 export interface Requirements {
