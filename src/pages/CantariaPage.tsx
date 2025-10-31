@@ -27,7 +27,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
   itemInfoMap,
   type ItemInfo,
-  recipeMap,
   cantariaData,
 } from '../data/cantariaData';
 import { calculateRequirements, type Requirements } from '../utils/craftCalculator';
