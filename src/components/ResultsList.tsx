@@ -13,7 +13,7 @@ import { itemInfoMap, type ItemInfo } from '../data/cantariaData';
 
 // Mapeamento de cores (tipado como um Record)
 const colorMap: Record<string, string> = {
-  cinza: '#9e9e9e',
+  cinza: '#4a4a4aff',
   verde: '#4caf50',
   laranja: '#ff9800',
   default: '#607d8b',

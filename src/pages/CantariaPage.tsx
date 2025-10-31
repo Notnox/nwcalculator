@@ -19,11 +19,15 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  // --- NOVOS IMPORTS ---
+  Tooltip,
+  IconButton,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
   itemInfoMap,
   type ItemInfo,
+  recipeMap,
   cantariaData,
 } from '../data/cantariaData';
 import { calculateRequirements, type Requirements } from '../utils/craftCalculator';
@@ -31,18 +35,23 @@ import ResultsList from '../components/ResultsList';
 
 // Mapeamento de cores
 const colorMap: Record<string, string> = {
-  cinza: '#9e9e9e',
+  cinza: '#4a4a4aff',
   verde: '#4caf50',
   laranja: '#ff9800',
   default: '#607d8b',
 };
 
 const CantariaPage: React.FC = () => {
-  const targetItemName = 'Bloco Prismático';
+  // --- MUDANÇA PRINCIPAL ---
+  // O item alvo agora é um estado, com "Bloco Prismático" como padrão.
+  const [targetItemName, setTargetItemName] = useState('Bloco Prismático');
+
+  // --- TUDO ABAIXO AGORA É DINÂMICO ---
   const targetItemInfo: ItemInfo | undefined = itemInfoMap.get(targetItemName);
   
   const colorKey = targetItemInfo?.backgroundColor || 'default';
   const targetBgColor = colorMap[colorKey] || colorMap.default;
+  // --- FIM DA MUDANÇA ---
 
   const [quantity, setQuantity] = useState('1'); 
   const [results, setResults] = useState<Requirements | null>(null);
@@ -64,8 +73,10 @@ const CantariaPage: React.FC = () => {
       if (clothesBonus) totalBonus += 10;
       if (fortBonus) totalBonus += 10;
 
+      // --- MUDANÇA NO CÁLCULO ---
+      // Passa o 'targetItemName' que está no estado
       const calculated: Requirements = calculateRequirements(
-        targetItemName,
+        targetItemName, 
         qty,
         totalBonus
       );
@@ -74,14 +85,20 @@ const CantariaPage: React.FC = () => {
       setResults(null);
     }
   };
+  
+  // Limpa os resultados se o item alvo mudar
+  const handleTargetItemChange = (newItemName: string) => {
+    setTargetItemName(newItemName);
+    setResults(null); // Limpa os resultados antigos
+    setQuantity('1'); // Reseta a quantidade
+  };
+
 
   return (
     <Box>
       <Paper
         elevation={3}
         sx={{
-          // --- MUDANÇA DE ESTILO (Padding) ---
-          // Restauramos o padding em todos os lados (p: 3)
           p: 3, 
           display: 'flex',
           flexDirection: 'column',
@@ -90,6 +107,54 @@ const CantariaPage: React.FC = () => {
           overflow: 'hidden', 
         }}
       >
+        {/* --- NOVO SELETOR DE REFINAMENTOS --- */}
+        <Box sx={{ width: '100%', mb: 3, borderBottom: 1, borderColor: 'divider', pb: 3 }}>
+          <Typography variant="caption" display="block" sx={{ textAlign: 'center', color: 'text.secondary', mb: 1.5 }}>
+            Selecione o item para calcular:
+          </Typography>
+          <Stack 
+            direction="row" 
+            spacing={1} 
+            justifyContent="center" 
+            flexWrap="wrap"
+            // Adiciona um espaçamento entre as linhas se quebrar
+            sx={{ rowGap: 1 }} 
+          >
+            {cantariaData.refinamentos.map((item) => {
+              const info = itemInfoMap.get(item.item);
+              const isSelected = item.item === targetItemName;
+              
+              return (
+                <Tooltip title={item.item} key={item.item} arrow>
+                  {/* Usamos um IconButton para dar área de clique e feedback */}
+                  <IconButton 
+                    onClick={() => handleTargetItemChange(item.item)}
+                    sx={{ 
+                      p: 0.5, 
+                      // Estilo para o item selecionado (cinza/opaco)
+                      opacity: isSelected ? 0.5 : 1.0,
+                      border: isSelected ? '2px solid' : '2px solid transparent',
+                      borderColor: 'primary.main',
+                    }}
+                  >
+                    <Avatar 
+                      src={info?.imagem} 
+                      sx={{ 
+                        backgroundColor: info ? colorMap[info.backgroundColor] : colorMap.default,
+                        // Deixamos os ícones menores
+                        width: 40, 
+                        height: 40 
+                      }} 
+                    />
+                  </IconButton>
+                </Tooltip>
+              );
+            })}
+          </Stack>
+        </Box>
+        {/* --- FIM DO NOVO SELETOR --- */}
+
+        {/* O Avatar principal agora é dinâmico */}
         <Avatar
           src={targetItemInfo?.imagem}
           sx={{
@@ -99,6 +164,7 @@ const CantariaPage: React.FC = () => {
             mb: 2,
           }}
         />
+        {/* O Título principal agora é dinâmico */}
         <Typography variant="h5" gutterBottom>
           {targetItemInfo?.item}
         </Typography>
@@ -132,7 +198,7 @@ const CantariaPage: React.FC = () => {
           direction="row"
           spacing={2}
           alignItems="center"
-          sx={{ mt: 2, mb: 3 }} // Deixamos uma margem inferior para o Accordion
+          sx={{ mt: 2, mb: 3 }} 
         >
           <TextField
             label="Quantidade"
@@ -149,9 +215,9 @@ const CantariaPage: React.FC = () => {
           </Button>
         </Stack>
 
-        {/* --- RODAPÉ CORRIGIDO (Estilo e Bug) --- */}
-        {/* Removemos o <Box> com margens negativas. 
-          O Accordion agora fica DENTRO do padding do Paper.
+        {/* O Accordion/Tabela não precisa de mudanças, 
+           pois ele já mostra todas as receitas de forma 
+           dinâmica, o que continua sendo útil.
         */}
         <Accordion 
           elevation={0} 
@@ -188,11 +254,6 @@ const CantariaPage: React.FC = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {/* --- CORREÇÃO DO BUG --- */}
-                  {/* Iteramos sobre 'cantariaData.receitas' 
-                    em vez de 'cantariaData.refinamentos'.
-                    Isso garante que "Bloco Prismático" apareça.
-                  */}
                   {cantariaData.receitas.map((recipe) => {
                     const baseChance = recipe.chance_adicional || 0;
                     const currentClothesBonus = clothesBonus ? 10 : 0;
@@ -218,7 +279,6 @@ const CantariaPage: React.FC = () => {
             </TableContainer>
           </AccordionDetails>
         </Accordion>
-        {/* --- FIM DAS CORREÇÕES --- */}
 
       </Paper>
 
@@ -239,7 +299,7 @@ const CantariaPage: React.FC = () => {
           </Box>
           <Box sx={{ width: { xs: '100%', md: '50%' } }}>
             <ResultsList
-              title="Itens de Matéria-Prima"
+              title="Itens de Matéria-Prima Necessários"
               itemsMap={results.base}
             />
           </Box>
