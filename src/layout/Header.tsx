@@ -5,7 +5,10 @@ import { modules } from '../data/modules';
 
 function Header() {
   return (
-    <AppBar position="static">
+    <AppBar position="fixed" 
+      sx={{ 
+        backgroundColor: '#1f1f1f' // Pode ser '1f1f1f' ou '#1f1f1f'
+      }}>
       <Toolbar>
          <Avatar
             src={"https://cdn.nwdb.info/static/images/brand/logo_transparent_48.png"}
