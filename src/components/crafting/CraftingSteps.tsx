@@ -25,7 +25,7 @@ interface CraftingStepsProps {
 const CraftingSteps: React.FC<CraftingStepsProps> = ({ steps, itemInfoMap }) => {
   return (
     <Stack spacing={3}>
-      <Typography variant="h5" sx={{ textAlign: 'center', mb: 1 }}>
+      <Typography variant="h5" sx={{ textAlign: 'center', mb: 1, color: '#fff' }}>
         Etapas de Craft
       </Typography>
 

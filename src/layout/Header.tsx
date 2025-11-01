@@ -5,34 +5,42 @@ import { modules } from '../data/modules';
 
 function Header() {
   return (
-    <AppBar position="fixed" 
+    // --- MUDANÇA AQUI ---
+    // Em vez de 'sx', usamos 'color="primary"'
+    // O MUI vai usar a cor '#1f1f1f' que definimos no main.tsx
+    <AppBar position="fixed" color="primary" 
       sx={{ 
         backgroundColor: '#1f1f1f' // Pode ser '1f1f1f' ou '#1f1f1f'
-      }}>
+      }}
+    >
+      {/* --- FIM DA MUDANÇA --- */}
       <Toolbar>
          <Avatar
             src={"https://cdn.nwdb.info/static/images/brand/logo_transparent_48.png"}
             sx={{
               backgroundColor: '#000000',
               width: 40, height: 40,
-              mr: 1.5, // Adicionei uma margem para separar do texto
+              mr: 1.5,
             }}
           />
-        {/* --- MUDANÇA AQUI --- */}
         <Typography 
           variant="h6" 
-          component={RouterLink} // 1. Trocado de 'div' para 'RouterLink'
-          to="/"                  // 2. Adicionado o link para a raiz
+          component={RouterLink}
+          to="/"                  
           sx={{ 
             flexGrow: 1,
-            color: 'inherit',       // 3. Mantém a cor branca do header
-            textDecoration: 'none'  // 4. Remove o sublinhado do link
+            // 'inherit' agora vai herdar 'contrastText' (branco) do tema
+            color: 'inherit',       
+            textDecoration: 'none'  
           }}
         >
           New World Calc
         </Typography>
-        {/* --- FIM DA MUDANÇA --- */}
         <Box>
+          {/* 'inherit' também vai herdar o 'contrastText' (branco) */}
+          <Button color="inherit" component={RouterLink} to="/">
+            Início
+          </Button>
           {modules.map((module) => (
             <Button
               key={module.id}
