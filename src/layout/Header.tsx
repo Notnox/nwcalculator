@@ -38,9 +38,6 @@ function Header() {
         </Typography>
         <Box>
           {/* 'inherit' também vai herdar o 'contrastText' (branco) */}
-          <Button color="inherit" component={RouterLink} to="/">
-            Início
-          </Button>
           {modules.map((module) => (
             <Button
               key={module.id}

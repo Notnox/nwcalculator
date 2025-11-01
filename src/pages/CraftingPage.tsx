@@ -79,7 +79,7 @@ const CraftingPage: React.FC<CraftingPageProps> = ({ module }) => {
       {/* Card Principal */}
       <Paper
         elevation={3}
-        sx={{ p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 4, overflow: 'hidden' }}
+        sx={{ p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 4, overflow: 'hidden', backgroundColor: 'hsl(0, 0%, %)' }}
       >
         <ItemSelector
           refinements={module.data.refinamentos}

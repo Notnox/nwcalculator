@@ -3,40 +3,42 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 
-// 1. NOVOS IMPORTS
+// 1. IMPORTS (você já deve ter)
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-
-// Mantenha seu CSS para a fonte
 import './index.css' 
 
-// 2. CRIE O TEMA (A MUDANÇA ESTÁ AQUI)
-const lightThemeWithDarkBody = createTheme({
+// 2. CRIE O TEMA (AQUI ESTÁ A MÁGICA)
+const darkTheme = createTheme({
   palette: {
-    // 1. Mantenha o modo 'light'.
-    // Isso faz com que os componentes (Paper, Typography, etc.)
-    // usem seus estilos de tema claro (ex: cards brancos, texto preto).
-    mode: 'light', 
+    // 1. Definimos o modo como 'dark'.
+    // Isso faz com que todo o texto em cima dos cards fique branco.
+    mode: 'dark', 
     
-    // 2. Sobrescreva APENAS a cor do <body>
-    background: {
-      default: 'hsl(0, 0%, 12%)',
-      // 'paper' (cor do card) continuará sendo branco (padrão do 'light')
+    // 2. ESTA É A MUDANÇA PRINCIPAL:
+    // Forçamos a cor primária a ser o azul padrão do MUI.
+    // Assim, seu botão "CALCULAR" (que usa color="primary")
+    // continuará azul, mesmo no tema escuro.
+    primary: {
+      main: '#1976d2', // Este é o azul padrão do MUI
     },
-    
 
-    // 3. (Opcional, mas recomendado) 
-    //    Define a cor do AppBar que você já usa como a cor "primária".
+    background: {
+      // 3. A cor de fundo do <body> (seu cinza escuro)
+      default: 'hsl(0, 0%, 12%)',
+      
+      // 4. O "cinza mais agradável" para os cards (Paper)
+      // Usei a cor #1f1f1f que você definiu para o seu AppBar,
+      // assim o header e os cards terão o mesmo tom.
+      paper: '#1f1f1f', 
+    },
   },
 });
 
 // 3. APLIQUE O TEMA
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ThemeProvider theme={lightThemeWithDarkBody}>
-      {/* O CssBaseline agora vai ler o tema e aplicar 
-          background.default (seu cinza escuro) ao <body>
-      */}
+    <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <App />
     </ThemeProvider>
