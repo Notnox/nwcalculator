@@ -1,6 +1,7 @@
 // src/layout/Header.jsx
 import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
+import { modules } from '../data/modules';
 
 function Header() {
   return (
@@ -13,9 +14,16 @@ function Header() {
           <Button color="inherit" component={RouterLink} to="/">
             Início
           </Button>
-          <Button color="inherit" component={RouterLink} to="/cantaria">
-            Cantaria
-          </Button>
+          {modules.map((module) => (
+            <Button
+              key={module.id}
+              color="inherit"
+              component={RouterLink}
+              to={`/${module.id}`}
+            >
+              {module.title}
+            </Button>
+          ))}
         </Box>
       </Toolbar>
     </AppBar>

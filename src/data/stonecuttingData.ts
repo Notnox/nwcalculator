@@ -1,36 +1,15 @@
 // src/data/cantariaData.ts
 
-// --- Definições de Tipo ---
-// Descreve um item em 'material_base' ou 'refinamentos'
-export interface ItemInfo {
-  item: string;
-  imagem: string;
-  backgroundColor: string; // Pode ser 'cinza', 'verde', 'laranja', etc.
-}
-
-// Descreve um ingrediente dentro de uma receita
-export interface Ingredient {
-  item: string;
-  quantidade: number;
-}
-
-// Descreve um item em 'receitas'
-export interface Recipe {
-  item: string;
-  chance_adicional: number;
-  ingredientes: Ingredient[];
-}
-
-// Descreve a estrutura completa do nosso objeto principal
-export interface CantariaData {
-  material_base: ItemInfo[];
-  refinamentos: ItemInfo[];
-  receitas: Recipe[];
-}
+import { 
+  type ItemInfo, 
+  type Recipe, 
+  type CraftingData, 
+  type CraftingModule 
+} from '../types/craftingTypes';
 
 // --- Dados ---
 // Agora, garantimos que 'cantariaData' SEGUE a estrutura que definimos
-export const cantariaData: CantariaData = {
+const stonecuttingData: CraftingData = {
   material_base: [
     {item: "Pedra", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/stonet1.png", backgroundColor: "cinza"},
     {item: "Magnetita", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/stonet4.png", backgroundColor: "cinza"},
@@ -68,16 +47,15 @@ export const cantariaData: CantariaData = {
 // --- Helper Maps (com tipagem) ---
 
 // Map<string, Recipe> -> Um Map onde a chave é string e o valor é uma Recipe
-export const recipeMap = new Map<string, Recipe>(
-  cantariaData.receitas.map(recipe => [recipe.item, recipe])
+const recipeMap = new Map<string, Recipe>(
+  stonecuttingData.receitas.map(recipe => [recipe.item, recipe])
 );
 
-// Map<string, ItemInfo> -> Chave string, valor é ItemInfo
 const allItems: ItemInfo[] = [
-  ...cantariaData.material_base,
-  ...cantariaData.refinamentos,
+  ...stonecuttingData.material_base,
+  ...stonecuttingData.refinamentos,
 ];
-export const itemInfoMap = new Map<string, ItemInfo>(
+const itemInfoMap = new Map<string, ItemInfo>(
   allItems.map(item => [item.item, item])
 );
 
@@ -90,3 +68,11 @@ itemInfoMap.set(
     backgroundColor: "verde"
   }
 );
+
+export const stonecuttingModule: CraftingModule = {
+  id: "cantaria",
+  title: "Cantaria",
+  data: stonecuttingData,
+  recipeMap: recipeMap,
+  itemInfoMap: itemInfoMap,
+};

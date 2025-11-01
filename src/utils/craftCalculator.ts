@@ -1,5 +1,5 @@
 // src/utils/craftCalculator.ts
-import { recipeMap, type Recipe } from '../data/cantariaData';
+import { type Recipe } from '../types/craftingTypes';
 
 // --- NOVO: Interface para uma Etapa de Craft ---
 export interface CraftingStep {
@@ -22,7 +22,8 @@ function processItem(
   itemName: string,
   neededQty: number,
   requirements: Requirements,
-  bonusChance: number 
+  bonusChance: number,
+  recipeMap: Map<string, Recipe>
 ): void {
   const recipe: Recipe | undefined = recipeMap.get(itemName);
 
@@ -51,7 +52,7 @@ function processItem(
       });
       
       // Chamada recursiva para os sub-itens
-      processItem(ingredient.item, ingredientQtyNeeded, requirements, bonusChance);
+      processItem(ingredient.item, ingredientQtyNeeded, requirements, bonusChance, recipeMap);
     }
     
     // --- NOVO: Adiciona a etapa de craft na lista ---
@@ -75,7 +76,8 @@ function processItem(
 export function calculateRequirements(
   targetItemName: string,
   targetQuantity: number,
-  bonusChance: number 
+  bonusChance: number,
+  recipeMap: Map<string, Recipe>
 ): Requirements {
   
   // Inicializa o objeto de requisitos com o novo array 'steps'
@@ -84,7 +86,7 @@ export function calculateRequirements(
     base: new Map<string, number>(),
     steps: [], // <-- NOVO
   };
-
+  
   const targetRecipe: Recipe | undefined = recipeMap.get(targetItemName);
   if (!targetRecipe) {
     console.error(`Receita para ${targetItemName} não encontrada!`);
@@ -108,7 +110,7 @@ export function calculateRequirements(
       quantity: ingredientQtyNeeded
     });
     
-    processItem(ingredient.item, ingredientQtyNeeded, requirements, bonusChance);
+    processItem(ingredient.item, ingredientQtyNeeded, requirements, bonusChance, recipeMap);
   }
 
   // --- NOVO: Adiciona a etapa final (ex: Etapa 5: Bloco Prismático) ---

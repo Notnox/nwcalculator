@@ -9,28 +9,29 @@ import {
   Typography,
   Paper,
 } from '@mui/material';
-import { itemInfoMap, type ItemInfo } from '../data/cantariaData';
+import { type ItemInfo } from '../types/craftingTypes';
+// --- MUDANÇA 1: Importar o colorMap centralizado ---
+import { colorMap } from '../utils/colorMap';
 
-// Mapeamento de cores (tipado como um Record)
+// --- MUDANÇA 2: Remover o colorMap local ---
+/*
 const colorMap: Record<string, string> = {
   cinza: '#4a4a4aff',
   verde: '#4caf50',
   laranja: '#ff9800',
   default: '#607d8b',
 };
+*/
 
-// 1. Definindo a interface para as props do componente
 interface ResultsListProps {
   title: string;
   itemsMap: Map<string, number>;
+  itemInfoMap: Map<string, ItemInfo>;
 }
 
-// 2. Usando React.FC (Functional Component) e tipando as props
-const ResultsList: React.FC<ResultsListProps> = ({ title, itemsMap }) => {
+const ResultsList: React.FC<ResultsListProps> = ({ title, itemsMap, itemInfoMap }) => {
   
-  // 'itemsArray' será do tipo [string, number][]
   const itemsArray = Array.from(itemsMap.entries());
-  
   itemsArray.sort((a, b) => b[1] - a[1]);
 
   return (
@@ -40,12 +41,12 @@ const ResultsList: React.FC<ResultsListProps> = ({ title, itemsMap }) => {
       </Typography>
       <List dense>
         {itemsArray.map(([itemName, quantity]) => {
-          // 'info' será do tipo 'ItemInfo | undefined'
-          const info: ItemInfo | undefined = itemInfoMap.get(itemName);
-          const qty: number = Math.ceil(quantity); // Arredonda para cima
           
-          // Lógica mais segura para fallback de cor
+          const info: ItemInfo | undefined = itemInfoMap.get(itemName);
+          const qty: number = Math.ceil(quantity); 
+          
           const colorKey = info?.backgroundColor || 'default';
+          // Esta linha agora usa o 'colorMap' importado
           const bgColor = colorMap[colorKey] || colorMap.default;
 
           return (
