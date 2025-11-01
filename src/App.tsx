@@ -1,5 +1,5 @@
 // src/App.tsx
-import React, { useState, useMemo, useEffect } from 'react'; // <-- 1. Importar useEffect
+import { useState, useMemo, useEffect } from 'react'; // <-- 1. Importar useEffect
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import MainLayout from './layout/MainLayout';
 import HomePage from './pages/HomePage';
