@@ -51,7 +51,7 @@ const itemInfoMap = new Map<string, ItemInfo>(
 // --- Exportação Principal ---
 export const woodworkingModule: CraftingModule = {
   id: "carpintaria", // O 'path' da URL
-  title: "Carpintaria", // O texto do link no Header
+  title: "Marcenaria", // O texto do link no Header
   data: woodworkingData,
   recipeMap: recipeMap,
   itemInfoMap: itemInfoMap,
