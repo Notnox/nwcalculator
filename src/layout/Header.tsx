@@ -1,19 +1,30 @@
 // src/layout/Header.tsx
-import { AppBar, Toolbar, Typography, Button, Box, Avatar } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Box, Avatar, IconButton } from '@mui/material'; // <-- Adicionado IconButton
 import { Link as RouterLink } from 'react-router-dom';
 import { modules } from '../data/modules';
 
-function Header() {
+// --- NOVOS IMPORTS DE ÍCONES ---
+import Brightness4Icon from '@mui/icons-material/Brightness4'; // Lua (Dark)
+import Brightness7Icon from '@mui/icons-material/Brightness7'; // Sol (Light)
+
+// --- NOVAS PROPS ---
+interface HeaderProps {
+  mode: 'light' | 'dark';
+  toggleTheme: () => void;
+}
+
+function Header({ mode, toggleTheme }: HeaderProps) {
   return (
-    // --- MUDANÇA AQUI ---
-    // Em vez de 'sx', usamos 'color="primary"'
-    // O MUI vai usar a cor '#1f1f1f' que definimos no main.tsx
-    <AppBar position="fixed" color="primary" 
+    <AppBar 
+      position="fixed" 
+      color="primary" 
       sx={{ 
-        backgroundColor: '#1f1f1f' // Pode ser '1f1f1f' ou '#1f1f1f'
+        // Usamos a cor do tema 'paper' para o AppBar,
+        // que agora é dinâmico (dark: #1f1f1f, light: #ffffff)
+        // Mas o seu AppBar é preto, então vamos manter
+        backgroundColor: '#1f1f1f' 
       }}
     >
-      {/* --- FIM DA MUDANÇA --- */}
       <Toolbar>
          <Avatar
             src={"https://cdn.nwdb.info/static/images/brand/logo_transparent_48.png"}
@@ -29,7 +40,6 @@ function Header() {
           to="/"                  
           sx={{ 
             flexGrow: 1,
-            // 'inherit' agora vai herdar 'contrastText' (branco) do tema
             color: 'inherit',       
             textDecoration: 'none'  
           }}
@@ -37,7 +47,6 @@ function Header() {
           New World Calc
         </Typography>
         <Box>
-          {/* 'inherit' também vai herdar o 'contrastText' (branco) */}
           {modules.map((module) => (
             <Button
               key={module.id}
@@ -48,6 +57,13 @@ function Header() {
               {module.title}
             </Button>
           ))}
+          
+          {/* --- NOVO BOTÃO DE TEMA --- */}
+          <IconButton sx={{ ml: 1 }} onClick={toggleTheme} color="inherit">
+            {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+          </IconButton>
+          {/* --- FIM DO BOTÃO --- */}
+
         </Box>
       </Toolbar>
     </AppBar>

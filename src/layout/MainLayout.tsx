@@ -1,14 +1,22 @@
-// src/layout/MainLayout.jsx
+// src/layout/MainLayout.tsx
 import { Outlet } from 'react-router-dom';
 import Header from './Header';
 import { Container } from '@mui/material';
 
-function MainLayout() {
+// --- NOVAS PROPS ---
+interface MainLayoutProps {
+  mode: 'light' | 'dark';
+  toggleTheme: () => void;
+}
+
+function MainLayout({ mode, toggleTheme }: MainLayoutProps) {
   return (
     <>
-      <Header />
+      {/* Passa as props para o Header */}
+      <Header mode={mode} toggleTheme={toggleTheme} />
+      
       <Container component="main" sx={{ mt: 10, mb: 4 }}>
-        <Outlet /> {/* As páginas (HomePage, CantariaPage) serão renderizadas aqui */}
+        <Outlet />
       </Container>
     </>
   );

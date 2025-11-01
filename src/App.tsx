@@ -1,31 +1,96 @@
 // src/App.tsx
+import React, { useState, useMemo, useEffect } from 'react'; // <-- 1. Importar useEffect
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import MainLayout from './layout/MainLayout';
 import HomePage from './pages/HomePage';
-import CraftingPage from './pages/CraftingPage'; // <-- A página genérica
-import { modules } from './data/modules'; // <-- Nosso índice de módulos
+import CraftingPage from './pages/CraftingPage';
+import { modules } from './data/modules';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { type PaletteMode } from '@mui/material';
+import CssBaseline from '@mui/material/CssBaseline';
 
 const repoName = '/nwcalculator/';
 
-function App() {
-  return (
-   <BrowserRouter basename={repoName}>
-      <Routes>
-        <Route element={<MainLayout />}>
-          <Route index element={<HomePage />} />
-          
-          {/* Mapeia os módulos para criar as rotas dinamicamente! */}
-          {modules.map((module) => (
-            <Route 
-              key={module.id}
-              path={module.id} 
-              element={<CraftingPage module={module} />} 
-            />
-          ))}
+// LÓGICA DO TEMA (sem alteração)
+const darkThemeOptions = {
+  palette: {
+    mode: 'dark' as PaletteMode,
+    primary: { main: '#1976d2' },
+    background: {
+      default: 'hsl(0, 0%, 12%)',
+      paper: '#1f1f1f',
+    },
+  },
+};
+const lightThemeOptions = {
+  palette: {
+    mode: 'light' as PaletteMode,
+    primary: { main: '#1976d2' },
+    background: {
+      default: '#f4f4f5',
+      paper: '#ffffff',
+    },
+  },
+};
 
-        </Route>
-      </Routes>
-    </BrowserRouter>
+function App() {
+  // --- 2. ESTADO DO TEMA (COM LEITURA DO LOCALSTORAGE) ---
+  const [themeMode, setThemeMode] = useState<'light' | 'dark'>(() => {
+    // Esta função roda apenas uma vez, na inicialização
+    const storedTheme = localStorage.getItem('themeMode');
+    if (storedTheme === 'light' || storedTheme === 'dark') {
+      return storedTheme;
+    }
+    // Padrão se nada for encontrado
+    return 'dark'; 
+  });
+
+  // Função para trocar o tema (sem alteração)
+  const toggleTheme = () => {
+    setThemeMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+  };
+
+  // --- 3. NOVO: EFEITO PARA SALVAR NO LOCALSTORAGE ---
+  // Este hook roda toda vez que 'themeMode' muda
+  useEffect(() => {
+    localStorage.setItem('themeMode', themeMode);
+  }, [themeMode]);
+
+  // Tema é criado dinamicamente (sem alteração)
+  const theme = useMemo(
+    () =>
+      createTheme(
+        themeMode === 'light' ? lightThemeOptions : darkThemeOptions
+      ),
+    [themeMode]
+  );
+
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <BrowserRouter basename={repoName}>
+        <Routes>
+          <Route 
+            element={
+              <MainLayout 
+                mode={themeMode} 
+                toggleTheme={toggleTheme} 
+              />
+            }
+          >
+            <Route index element={<HomePage />} />
+            
+            {modules.map((module) => (
+              <Route 
+                key={module.id}
+                path={module.id} 
+                element={<CraftingPage module={module} />} 
+              />
+            ))}
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 
