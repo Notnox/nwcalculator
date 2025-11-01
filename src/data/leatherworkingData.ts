@@ -51,7 +51,7 @@ const itemInfoMap = new Map<string, ItemInfo>(
 // --- Exportação Principal ---
 export const leatherworkingModule: CraftingModule = {
   id: "couraria", // O 'path' da URL
-  title: "Couraria", // O texto do link no Header
+  title: "Curtume", // O texto do link no Header
   data: leatherworkingData,
   recipeMap: recipeMap,
   itemInfoMap: itemInfoMap,
