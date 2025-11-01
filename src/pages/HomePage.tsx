@@ -6,13 +6,24 @@ import {
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { useApp } from '../layout/MainLayout'; // <-- Importar o hook de contexto
 
-// --- NOVO: Objeto de Traduções ---
+// --- Objeto de Traduções ATUALIZADO ---
 const translations = {
   pt: {
     welcome: "Bem-vindo ao New World Calc",
     subtitle: "Sua ferramenta completa para planejar e calcular os custos de refino no New World.",
-    what: "O que este site faz?",
-    what_desc: "Chega de adivinhar ou fazer contas complexas no papel. Esta calculadora de craft foi projetada para fornecer uma lista de materiais exata, considerando todos os seus bônus de refino.",
+    // --- NOVA SEÇÃO: COMO USAR ---
+    how_title: "Como usar o site",
+    h_step1_title: "1. Selecione a Profissão",
+    h_step1_desc: "Clique em 'Calc Refinos' no menu para escolher a profissão (ex: Cantaria, Fundição).",
+    h_step2_title: "2. Escolha o Item Final",
+    h_step2_desc: "Na página da profissão, clique no ícone do item que você deseja fabricar (ex: Bloco Prismático).",
+    h_step3_title: "3. Ajuste seus Bônus",
+    h_step3_desc: "Marque ou desmarque as caixas de 'Roupa' e 'Forte' para corresponder aos seus bônus no jogo.",
+    h_step4_title: "4. Calcule!",
+    h_step4_desc: "Digite a quantidade desejada e clique em 'Calcular' para ver a lista de compras e o guia de refino.",
+    // --- SEÇÃO ANTIGA (RENOMEADA) ---
+    features_title: "Funcionalidades Principais", // Renomeado de "what"
+    features_desc: "Esta calculadora de craft foi projetada para fornecer uma lista de materiais exata, considerando todos os seus bônus de refino.", // Renomeado de "what_desc"
     f1_title: "Cálculo de Bônus Preciso",
     f1_desc: "Inclui bônus de roupas e bônus de território (Forte) para um resultado exato.",
     f2_title: "Lista de Compras Otimizada",
@@ -24,8 +35,19 @@ const translations = {
   en: {
     welcome: "Welcome to New World Calc",
     subtitle: "Your complete tool for planning and calculating refining costs in New World.",
-    what: "What does this site do?",
-    what_desc: "Stop guessing or doing complex math on paper. This craft calculator is designed to provide an exact materials list, accounting for all your refining bonuses.",
+    // --- NEW SECTION: HOW TO USE ---
+    how_title: "How to Use the Site",
+    h_step1_title: "1. Select a Profession",
+    h_step1_desc: "Click 'Refining Calcs' in the menu to choose a profession (e.g., Stonecutting, Smelting).",
+    h_step2_title: "2. Choose the Final Item",
+    h_step2_desc: "On the profession's page, click the icon of the item you want to craft (e.g., Prismatic Block).",
+    h_step3_title: "3. Adjust Your Bonuses",
+    h_step3_desc: "Check or uncheck the 'Gear' and 'Fort' boxes to match your in-game bonuses.",
+    h_step4_title: "4. Calculate!",
+    h_step4_desc: "Enter the desired quantity and click 'Calculate' to see the shopping list and refining guide.",
+    // --- OLD SECTION (RENAMED) ---
+    features_title: "Main Features", // Renamed from "what"
+    features_desc: "This craft calculator is designed to provide an exact materials list, accounting for all your refining bonuses.", // Renamed from "what_desc"
     f1_title: "Accurate Bonus Calculation",
     f1_desc: "Includes gear bonuses and territory (Fort) bonuses for a precise result.",
     f2_title: "Optimized Shopping List",
@@ -54,12 +76,48 @@ function HomePage() {
           {t.subtitle}
         </Typography>
 
+        {/* --- NOVA SEÇÃO "COMO USAR" --- */}
+        <Box sx={{ alignSelf: 'flex-start', width: '100%', mb: 4 }}>
+          <Typography variant="h6" gutterBottom>
+            {t.how_title}
+          </Typography>
+          <List>
+            <ListItem>
+              <ListItemIcon sx={{ minWidth: 32 }}>
+                <Typography variant="h6" color="primary">1.</Typography>
+              </ListItemIcon>
+              <ListItemText primary={t.h_step1_title} secondary={t.h_step1_desc} />
+            </ListItem>
+            <ListItem>
+              <ListItemIcon sx={{ minWidth: 32 }}>
+                <Typography variant="h6" color="primary">2.</Typography>
+              </ListItemIcon>
+              <ListItemText primary={t.h_step2_title} secondary={t.h_step2_desc} />
+            </ListItem>
+            <ListItem>
+              <ListItemIcon sx={{ minWidth: 32 }}>
+                <Typography variant="h6" color="primary">3.</Typography>
+              </ListItemIcon>
+              <ListItemText primary={t.h_step3_title} secondary={t.h_step3_desc} />
+            </ListItem>
+            <ListItem>
+              <ListItemIcon sx={{ minWidth: 32 }}>
+                <Typography variant="h6" color="primary">4.</Typography>
+              </ListItemIcon>
+              <ListItemText primary={t.h_step4_title} secondary={t.h_step4_desc} />
+            </ListItem>
+          </List>
+        </Box>
+        {/* --- FIM DA NOVA SEÇÃO --- */}
+
+
+        {/* --- SEÇÃO "FUNCIONALIDADES" (ANTIGA "O QUE FAZ") --- */}
         <Box sx={{ alignSelf: 'flex-start', width: '100%' }}>
           <Typography variant="h6" gutterBottom>
-            {t.what}
+            {t.features_title} {/* Título atualizado */}
           </Typography>
           <Typography variant="body1" sx={{ mb: 2 }}>
-            {t.what_desc}
+            {t.features_desc} {/* Descrição atualizada */}
           </Typography>
 
           <List>
