@@ -33,6 +33,10 @@ const lightThemeOptions = {
   },
 };
 
+export type AppContextType = {
+  language: 'pt' | 'en';
+};
+
 function App() {
   // --- 2. ESTADO DO TEMA (COM LEITURA DO LOCALSTORAGE) ---
   const [themeMode, setThemeMode] = useState<'light' | 'dark'>(() => {
@@ -56,6 +60,17 @@ function App() {
     localStorage.setItem('themeMode', themeMode);
   }, [themeMode]);
 
+  const [language, setLanguage] = useState<'pt' | 'en'>(() => {
+    const storedLang = localStorage.getItem('language');
+    return (storedLang === 'pt' || storedLang === 'en') ? storedLang : 'pt';
+  });
+  const handleChangeLanguage = (lang: 'pt' | 'en') => {
+    setLanguage(lang);
+  };
+  useEffect(() => {
+    localStorage.setItem('language', language);
+  }, [language]);
+
   // Tema é criado dinamicamente (sem alteração)
   const theme = useMemo(
     () =>
@@ -65,7 +80,7 @@ function App() {
     [themeMode]
   );
 
-  return (
+return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter basename={repoName}>
@@ -75,11 +90,13 @@ function App() {
               <MainLayout 
                 mode={themeMode} 
                 toggleTheme={toggleTheme} 
+                language={language} // Passa para o Header
+                setLanguage={handleChangeLanguage} // Passa para o Header
               />
             }
           >
+            {/* O Outlet agora passa o 'language' para TODAS as rotas filhas via contexto */}
             <Route index element={<HomePage />} />
-            
             {modules.map((module) => (
               <Route 
                 key={module.id}

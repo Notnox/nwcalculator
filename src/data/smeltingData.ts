@@ -6,23 +6,24 @@ import {
 } from '../types/craftingTypes';
 
 const smeltingData: CraftingData = {
+  name: {pt_name: "Fundição", en_name: "Smelting", imagem: "https://br.nwdb.info/images/db/icons/filters/tradeskills/smelting.png"},
   material_base: [
-    {item: "Minério de Ferro", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/oret1.png", backgroundColor: "cinza"},
-    {item: "Minério de Estelaço", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/oret4.png", backgroundColor: "cinza"},
-    {item: "Minério de Oricalco", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/oret5.png", backgroundColor: "cinza"},
-    {item: "Minério de Mythril", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/oret52.png", backgroundColor: "cinza"},
-    {item: "Carvão", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/charcoalt1.png", backgroundColor: "cinza"},
-    {item: "Fundente de Obsidiana", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/fluxt5.png", backgroundColor: "verde"},
-    {item: "Cinábrio", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/mi_corruptedmoss.png", backgroundColor: "roxo"}
+    {item: "Minério de Ferro", en_name: "Iron Ore", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/oret1.png", backgroundColor: "cinza"},
+    {item: "Minério de Estelaço", en_name: "Starmetal Ore", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/oret4.png", backgroundColor: "cinza"},
+    {item: "Minério de Oricalco", en_name: "Orichalcum Ore", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/oret5.png", backgroundColor: "cinza"},
+    {item: "Minério de Mythril", en_name: "Mythril Ore", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/oret52.png", backgroundColor: "cinza"},
+    {item: "Carvão", en_name: "Charcoal", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/charcoalt1.png", backgroundColor: "cinza"},
+    {item: "Fundente de Obsidiana", en_name: "Obsidian Flux", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/fluxt5.png", backgroundColor: "verde"},
+    {item: "Cinábrio", en_name: "Cinnabar", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/mi_corruptedmoss.png", backgroundColor: "roxo"}
   ],
   refinamentos: [
-    {item: "Lingote de Ferro", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/ingott2.png", backgroundColor: "cinza"},
-    {item: "Lingote de Aço", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/ingott3.png", backgroundColor: "cinza"},
-    {item: "Lingote de Estelaço", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/ingott4.png", backgroundColor: "cinza"},
-    {item: "Lingote de Oricalco", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/ingott5.png", backgroundColor: "cinza"},
-    {item: "Lingote de Mythril", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/ingott52.png", backgroundColor: "cinza"},
-    {item: "Asmódeo", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/ingott51.png", backgroundColor: "laranja"},
-    {item: "Lingote Prismático", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/ingott53.png", backgroundColor: "laranja"},
+    {item: "Lingote de Ferro", en_name: "Iron Ingot", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/ingott2.png", backgroundColor: "cinza"},
+    {item: "Lingote de Aço", en_name: "Steel Ingot", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/ingott3.png", backgroundColor: "cinza"},
+    {item: "Lingote de Estelaço", en_name: "Starmetal Ingot", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/ingott4.png", backgroundColor: "cinza"},
+    {item: "Lingote de Oricalco", en_name: "Orichalcum Ingot", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/ingott5.png", backgroundColor: "cinza"},
+    {item: "Lingote de Mythril", en_name: "Mythril Ingot", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/ingott52.png", backgroundColor: "cinza"},
+    {item: "Asmódeo", en_name: "Asmodeum", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/ingott51.png", backgroundColor: "laranja"},
+    {item: "Lingote Prismático", en_name: "Prismatic Ingot", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/ingott53.png", backgroundColor: "laranja"},
 
   ],
   receitas:[

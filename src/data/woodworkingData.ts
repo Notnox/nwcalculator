@@ -6,23 +6,24 @@ import {
 } from '../types/craftingTypes';
 
 const woodworkingData: CraftingData = {
+  name: {pt_name: "Carpintaria", en_name: "Woodworking", imagem: "https://br.nwdb.info/images/db/icons/filters/tradeskills/stonecutting.png"},
   material_base: [
-    {item: "Madeira Verde", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/woodt1.png", backgroundColor: "cinza"},
-    {item: "Madeira Envelhecida", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/woodt2.png", backgroundColor: "cinza"},
-    {item: "Urdeira", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/woodt4.png", backgroundColor: "cinza"},
-    {item: "Jucá", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/woodt5.png", backgroundColor: "cinza"},
-    {item: "Jacarandá", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/woodt52.png", backgroundColor: "cinza"},
-    {item: "Lixa de Obsidiana", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/sandpapert5.png", backgroundColor: "verde"},
-    {item: "Madeira Selvagem", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/writhingvinest3.png", backgroundColor: "roxo"}
+    {item: "Madeira Verde", en_name: "Green Wood", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/woodt1.png", backgroundColor: "cinza"},
+    {item: "Madeira Envelhecida", en_name: "Aged Wood", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/woodt2.png", backgroundColor: "cinza"},
+    {item: "Urdeira", en_name: "Wyrdwood", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/woodt4.png", backgroundColor: "cinza"},
+    {item: "Jucá", en_name: "Ironwood", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/woodt5.png", backgroundColor: "cinza"},
+    {item: "Jacarandá", en_name: "Runewood", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/woodt52.png", backgroundColor: "cinza"},
+    {item: "Lixa de Obsidiana", en_name: "Obsidian Sandpaper", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/sandpapert5.png", backgroundColor: "verde"},
+    {item: "Madeira Selvagem", en_name: "Wildwood", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/writhingvinest3.png", backgroundColor: "roxo"}
   ],
   refinamentos: [
-    {item: "Tábua", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/timbert2.png", backgroundColor: "cinza"},
-    {item: "Lenha", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/timbert3.png", backgroundColor: "cinza"},
-    {item: "Tábuas de Urdeira", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/timbert4.png", backgroundColor: "cinza"},
-    {item: "Tábuas de Jucá", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/timbert5.png", backgroundColor: "cinza"},
-    {item: "Tábuas de Jacarandá", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/timbert52.png", backgroundColor: "cinza"},
-    {item: "Ébano Cintilante", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/timbert51.png", backgroundColor: "laranja"},
-    {item: "Tábuas Prismáticas", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/timbert53.png", backgroundColor: "laranja"},
+    {item: "Tábua", en_name: "Timber", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/timbert2.png", backgroundColor: "cinza"},
+    {item: "Lenha", en_name: "Lumber", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/timbert3.png", backgroundColor: "cinza"},
+    {item: "Tábuas de Urdeira", en_name: "Wyrdwood Planks", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/timbert4.png", backgroundColor: "cinza"},
+    {item: "Tábuas de Jucá", en_name: "Ironwood Planks", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/timbert5.png", backgroundColor: "cinza"},
+    {item: "Tábuas de Jacarandá", en_name: "Runewood Planks", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/timbert52.png", backgroundColor: "cinza"},
+    {item: "Ébano Cintilante", en_name: "Glittering Ebony", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/timbert51.png", backgroundColor: "laranja"},
+    {item: "Tábuas Prismáticas", en_name: "Prismatic Planks", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/timbert53.png", backgroundColor: "laranja"},
   ],
   receitas:[
     {item: "Tábua", chance_adicional: 30, ingredientes:[{item: "Madeira Verde", quantidade: 4}]},

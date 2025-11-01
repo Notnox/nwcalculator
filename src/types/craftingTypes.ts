@@ -3,6 +3,7 @@
 // Movido de cantariaData.ts
 export interface ItemInfo {
   item: string;
+  en_name: string;
   imagem: string;
   backgroundColor: string;
 }
@@ -22,6 +23,7 @@ export interface Recipe {
 
 // A estrutura de dados de uma profissão
 export interface CraftingData {
+  name: {pt_name: string; en_name: string; imagem: string};
   material_base: ItemInfo[];
   refinamentos: ItemInfo[];
   receitas: Recipe[];

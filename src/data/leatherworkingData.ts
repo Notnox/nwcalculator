@@ -6,22 +6,23 @@ import {
 } from '../types/craftingTypes';
 
 const leatherworkingData: CraftingData = {
+  name: {pt_name: "Curtume", en_name: "Leatherworking", imagem: "https://br.nwdb.info/images/db/icons/filters/tradeskills/leatherworking.png"},
   material_base: [
-    {item: "Couro Cru", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/rawhidet1.png", backgroundColor: "cinza"},
-    {item: "Pele Grossa", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/rawhidet4.png", backgroundColor: "cinza"},
-    {item: "Pele de Ferro", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/rawhidet5.png", backgroundColor: "cinza"},
-    {item: "Pele Sombria", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/rawhidet52.png", backgroundColor: "cinza"},
-    {item: "Tanino Envelhecido", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/tannint5.png", backgroundColor: "verde"},
-    {item: "Pele Cicatrizada", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/mangyhidet3.png", backgroundColor: "roxo"}
+    {item: "Couro Cru", en_name: "Rawhide", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/rawhidet1.png", backgroundColor: "cinza"},
+    {item: "Pele Grossa", en_name: "Thick Hide", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/rawhidet4.png", backgroundColor: "cinza"},
+    {item: "Pele de Ferro", en_name: "Iron Hide", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/rawhidet5.png", backgroundColor: "cinza"},
+    {item: "Pele Sombria", en_name: "Dark Hide", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/rawhidet52.png", backgroundColor: "cinza"},
+    {item: "Tanino Envelhecido", en_name: "Aged Tannin", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/tannint5.png", backgroundColor: "verde"},
+    {item: "Pele Cicatrizada", en_name: "Scarhide", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/mangyhidet3.png", backgroundColor: "roxo"}
   ],
   refinamentos: [
-    {item: "Couro Grosseiro", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/leathert2.png", backgroundColor: "cinza"},
-    {item: "Couro Rústico", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/leathert3.png", backgroundColor: "cinza"},
-    {item: "Couro Reforçado", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/leathert4.png", backgroundColor: "cinza"},
-    {item: "Couro Infuso", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/leathert5.png", backgroundColor: "cinza"},
-    {item: "Couro Sombrio", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/leathert52.png", backgroundColor: "cinza"},
-    {item: "Couro Rúnico", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/leathert51.png", backgroundColor: "laranja"},
-    {item: "Couro Prismático", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/leathert53.png", backgroundColor: "laranja"},
+    {item: "Couro Grosseiro", en_name: "Coarse Leather", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/leathert2.png", backgroundColor: "cinza"},
+    {item: "Couro Rústico", en_name: "Rugged Leather", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/leathert3.png", backgroundColor: "cinza"},
+    {item: "Couro Reforçado", en_name: "Layered Leather", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/leathert4.png", backgroundColor: "cinza"},
+    {item: "Couro Infuso", en_name: "Infused Leather", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/leathert5.png", backgroundColor: "cinza"},
+    {item: "Couro Sombrio", en_name: "Dark Leather", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/leathert52.png", backgroundColor: "cinza"},
+    {item: "Couro Rúnico", en_name: "Runic Leather", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/leathert51.png", backgroundColor: "laranja"},
+    {item: "Couro Prismático", en_name: "Prismatic Leather", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/leathert53.png", backgroundColor: "laranja"},
 
   ],
   receitas:[

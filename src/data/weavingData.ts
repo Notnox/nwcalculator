@@ -8,22 +8,23 @@ import {
 // --- Dados ---
 // Agora, garantimos que 'cantariaData' SEGUE a estrutura que definimos
 const weavingData: CraftingData = {
+  name: {pt_name: "Tecelagem", en_name: "Weaving", imagem: "https://br.nwdb.info/images/db/icons/filters/tradeskills/weaving.png"},
   material_base: [
-    {item: "Fibra", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/fibert1.png", backgroundColor: "cinza"},
-    {item: "Fios de Seda", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/fibert4.png", backgroundColor: "cinza"},
-    {item: "Fibra-de-fio", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/fibert5.png", backgroundColor: "cinza"},
-    {item: "Fibra Cruzada", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/fibert52.png", backgroundColor: "cinza"},
-    {item: "Trança de Fio", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/clothweavet5.png", backgroundColor: "verde"},
-    {item: "Tecido de Escama", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/mi_cloak.png", backgroundColor: "roxo"},
+    {item: "Fibra", en_name: "Fibers", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/fibert1.png", backgroundColor: "cinza"},
+    {item: "Fios de Seda", en_name: "Silk Threads", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/fibert4.png", backgroundColor: "cinza"},
+    {item: "Fibra-de-fio", en_name: "Wirefiber", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/fibert5.png", backgroundColor: "cinza"},
+    {item: "Fibra Cruzada", en_name: "Spinfiber", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/fibert52.png", backgroundColor: "cinza"},
+    {item: "Trança de Fio", en_name: "Wireweave", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/clothweavet5.png", backgroundColor: "verde"},
+    {item: "Tecido de Escama", en_name: "Scalecloth", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/mi_cloak.png", backgroundColor: "roxo"},
   ],
   refinamentos: [
-    {item: "Linho", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/clotht2.png", backgroundColor: "cinza"},
-    {item: "Cetim", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/clotht3.png", backgroundColor: "cinza"},
-    {item: "Seda", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/clotht4.png", backgroundColor: "cinza"},
-    {item: "Seda Infusa", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/clotht5.png", backgroundColor: "cinza"},
-    {item: "Tecido Cruzado", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/clotht52.png", backgroundColor: "cinza"},
-    {item: "Fio de Fênix", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/clotht51.png", backgroundColor: "laranja"},
-    {item: "Tecido Prismático", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/clotht53.png", backgroundColor: "laranja"},
+    {item: "Linho", en_name: "Linen", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/clotht2.png", backgroundColor: "cinza"},
+    {item: "Cetim", en_name: "Sateen", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/clotht3.png", backgroundColor: "cinza"},
+    {item: "Seda", en_name: "Silk", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/clotht4.png", backgroundColor: "cinza"},
+    {item: "Seda Infusa", en_name: "Infused Silk", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/clotht5.png", backgroundColor: "cinza"},
+    {item: "Tecido Cruzado", en_name: "Spinweave Cloth", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/clotht52.png", backgroundColor: "cinza"},
+    {item: "Fio de Fênix", en_name: "Phoenixweave", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/clotht51.png", backgroundColor: "laranja"},
+    {item: "Tecido Prismático", en_name: "Prismatic Cloth", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/clotht53.png", backgroundColor: "laranja"},
   ],
   receitas:[
     {item: "Linho", chance_adicional: 30, ingredientes:[{item: "Fibra", quantidade: 4}]},

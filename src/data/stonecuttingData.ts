@@ -10,28 +10,29 @@ import {
 // --- Dados ---
 // Agora, garantimos que 'cantariaData' SEGUE a estrutura que definimos
 const stonecuttingData: CraftingData = {
+  name: {pt_name: "Cantaria", en_name: "Stonecutting", imagem: "https://br.nwdb.info/images/db/icons/filters/tradeskills/stonecutting.png"},
   material_base: [
-    {item: "Pedra", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/stonet1.png", backgroundColor: "cinza"},
-    {item: "Magnetita", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/stonet4.png", backgroundColor: "cinza"},
-    {item: "Pó de Gema Poderoso", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/consumable/gemstonedustt5.png", backgroundColor: "cinza"},
-    {item: "Lixa de Obsidiana", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/sandpapert5.png", backgroundColor: "verde"},
-    {item: "Solvente Puro", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/solventt5.png", backgroundColor: "verde"},
-    {item: "Magnetita Derretida", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/lodestonefiret1.png", backgroundColor: "verde"},
-    {item: "Magnetita Congelante", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/lodestonewatert1.png", backgroundColor: "verde"},
-    {item: "Magnetita Pútrida", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/lodestonedeatht1.png", backgroundColor: "verde"},
-    {item: "Magnetita Cristalina", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/lodestonesoult1.png", backgroundColor: "verde"},
-    {item: "Magnetita Argilosa", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/lodestoneeartht1.png", backgroundColor: "verde"},
-    {item: "Magnetita Chocante", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/lodestoneairt1.png", backgroundColor: "verde"},
-    {item: "Magnetita Reluzente", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/lodestonelifet1.png", backgroundColor: "verde"}
+    {item: "Pedra", en_name: "Stone", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/stonet1.png", backgroundColor: "cinza"},
+    {item: "Magnetita", en_name: "Lodestone", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/stonet4.png", backgroundColor: "cinza"},
+    {item: "Pó de Gema Poderoso", en_name: "Powerful Gemstone Dust", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/consumable/gemstonedustt5.png", backgroundColor: "cinza"},
+    {item: "Lixa de Obsidiana", en_name: "Obsidian Sandpaper", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/sandpapert5.png", backgroundColor: "verde"},
+    {item: "Solvente Puro", en_name: "Pure Solvent", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/solventt5.png", backgroundColor: "verde"},
+    {item: "Magnetita Derretida", en_name: "Molten Lodestone", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/lodestonefiret1.png", backgroundColor: "verde"},
+    {item: "Magnetita Congelante", en_name: "Freezing Lodestone", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/lodestonewatert1.png", backgroundColor: "verde"},
+    {item: "Magnetita Pútrida", en_name: "Putrid Lodestone", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/lodestonedeatht1.png", backgroundColor: "verde"},
+    {item: "Magnetita Cristalina", en_name: "Crystalline Lodestone", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/lodestonesoult1.png", backgroundColor: "verde"},
+    {item: "Magnetita Argilosa", en_name: "Loamy Lodestone", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/lodestoneeartht1.png", backgroundColor: "verde"},
+    {item: "Magnetita Chocante", en_name: "Shocking Lodestone", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/lodestoneairt1.png", backgroundColor: "verde"},
+    {item: "Magnetita Reluzente", en_name: "Gleaming Lodestone", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/lodestonelifet1.png", backgroundColor: "verde"}
   ],
   refinamentos: [
-    {item: "Bloco de Pedra", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/blockt2.png", backgroundColor: "cinza"},
-    {item: "Tijolo de Pedra", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/blockt3.png", backgroundColor: "cinza"},
-    {item: "Tijolo de Magnetita", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/blockt4.png", backgroundColor: "cinza"},
-    {item: "Pedra Imaterial Obsidiana", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/blockt5.png", backgroundColor: "cinza"},
-    {item: "Pedra Imaterial Rúnica", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/blockt52.png", backgroundColor: "cinza"},
-    {item: "Pedra Rúnica", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/blockt51.png", backgroundColor: "laranja"},
-    {item: "Bloco Prismático", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/blockt53.png", backgroundColor: "laranja"},
+    {item: "Bloco de Pedra", en_name: "Stone Block", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/blockt2.png", backgroundColor: "cinza"},
+    {item: "Tijolo de Pedra", en_name: "Stone Brick", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/blockt3.png", backgroundColor: "cinza"},
+    {item: "Tijolo de Magnetita", en_name: "Lodestone Brick", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/blockt4.png", backgroundColor: "cinza"},
+    {item: "Pedra Imaterial Obsidiana", en_name: "Obsidian Voidstone", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/blockt5.png", backgroundColor: "cinza"},
+    {item: "Pedra Imaterial Rúnica", en_name: "Runic Voidstone", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/blockt52.png", backgroundColor: "cinza"},
+    {item: "Pedra Rúnica", en_name: "Runestone", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/blockt51.png", backgroundColor: "laranja"},
+    {item: "Bloco Prismático", en_name: "Prismatic Block", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/blockt53.png", backgroundColor: "laranja"},
   ],
   receitas:[
     {item: "Bloco de Pedra", chance_adicional: 30, ingredientes:[{item: "Pedra", quantidade: 4}]},
@@ -64,6 +65,7 @@ itemInfoMap.set(
   "Magnetita Derretida ou Magnetita Congelante ou Magnetita Pútrida ou Magnetita Cristalina ou Magnetita Argilosa ou Magnetita Chocante ou Magnetita Reluzente",
   {
     item: "Magnetita Elemental (Qualquer)",
+    en_name: "Elemental Lodestone (Any)",
     imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/lodestonefiret1.png",
     backgroundColor: "verde"
   }

@@ -1,48 +1,50 @@
 // src/layout/Header.tsx
-import { AppBar, Toolbar, Typography, Button, Box, Avatar, IconButton } from '@mui/material'; // <-- Adicionado IconButton
+import React, { useState } from 'react'; // <-- Importar useState
+import { AppBar, Toolbar, Typography, Button, Box, Avatar, IconButton, Menu, MenuItem } from '@mui/material'; // <-- Imports do Menu
 import { Link as RouterLink } from 'react-router-dom';
 import { modules } from '../data/modules';
-
-// --- NOVOS IMPORTS DE ÍCONES ---
-import Brightness4Icon from '@mui/icons-material/Brightness4'; // Lua (Dark)
-import Brightness7Icon from '@mui/icons-material/Brightness7'; // Sol (Light)
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
+import LanguageIcon from '@mui/icons-material/Language'; // <-- Ícone de Idioma
 
 // --- NOVAS PROPS ---
 interface HeaderProps {
   mode: 'light' | 'dark';
   toggleTheme: () => void;
+  language: 'pt' | 'en';
+  setLanguage: (lang: 'pt' | 'en') => void;
 }
 
-function Header({ mode, toggleTheme }: HeaderProps) {
+function Header({ mode, toggleTheme, language, setLanguage }: HeaderProps) {
+  
+  // --- NOVO: Estado para o Menu de Idioma ---
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const handleLanguageSelect = (lang: 'pt' | 'en') => {
+    setLanguage(lang);
+    handleClose();
+  };
+  // --- FIM DO ESTADO DO MENU ---
+
   return (
-    <AppBar 
-      position="fixed" 
-      color="primary" 
-      sx={{ 
-        // Usamos a cor do tema 'paper' para o AppBar,
-        // que agora é dinâmico (dark: #1f1f1f, light: #ffffff)
-        // Mas o seu AppBar é preto, então vamos manter
-        backgroundColor: '#1f1f1f' 
-      }}
-    >
+    <AppBar position="fixed" color="primary" sx={{ backgroundColor: '#1f1f1f' }}>
       <Toolbar>
          <Avatar
             src={"https://cdn.nwdb.info/static/images/brand/logo_transparent_48.png"}
-            sx={{
-              backgroundColor: '#000000',
-              width: 40, height: 40,
-              mr: 1.5,
-            }}
+            sx={{ backgroundColor: '#000000', width: 40, height: 40, mr: 1.5 }}
           />
         <Typography 
           variant="h6" 
           component={RouterLink}
           to="/"                  
-          sx={{ 
-            flexGrow: 1,
-            color: 'inherit',       
-            textDecoration: 'none'  
-          }}
+          sx={{ flexGrow: 1, color: 'inherit', textDecoration: 'none' }}
         >
           New World Calc
         </Typography>
@@ -54,15 +56,41 @@ function Header({ mode, toggleTheme }: HeaderProps) {
               component={RouterLink}
               to={`/${module.id}`}
             >
-              {module.title}
+              {/* Agora o título do botão é dinâmico */}
+              {language === 'pt' ? module.title : module.data.name.en_name}
             </Button>
           ))}
           
-          {/* --- NOVO BOTÃO DE TEMA --- */}
+          {/* Botão de Tema (sem alteração) */}
           <IconButton sx={{ ml: 1 }} onClick={toggleTheme} color="inherit">
             {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
-          {/* --- FIM DO BOTÃO --- */}
+
+          <IconButton
+            color="inherit"
+            onClick={handleClick}
+            sx={{ ml: 1 }}
+          >
+            <LanguageIcon />
+          </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+          >
+            <MenuItem 
+              onClick={() => handleLanguageSelect('pt')}
+              selected={language === 'pt'} // Destaca o selecionado
+            >
+              Português (PT)
+            </MenuItem>
+            <MenuItem 
+              onClick={() => handleLanguageSelect('en')}
+              selected={language === 'en'}
+            >
+              English (EN)
+            </MenuItem>
+          </Menu>
 
         </Box>
       </Toolbar>

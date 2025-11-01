@@ -1,65 +1,78 @@
 // src/components/crafting/CraftingSteps.tsx
 import React from 'react';
-import {
-  Stack,
-  Typography,
-  Paper,
-  Box,
-  Avatar,
-  TableContainer,
-  Table,
-  TableBody,
-  TableRow,
-  TableCell,
-} from '@mui/material';
+import { Stack, Typography, Paper, Box, Avatar, TableContainer, Table, TableBody, TableRow, TableCell } from '@mui/material';
 import { type CraftingStep } from '../../utils/craftCalculator';
 import { type ItemInfo } from '../../types/craftingTypes';
-// --- MUDANÇA 1: Importar o colorMap centralizado ---
 import { colorMap } from '../../utils/colorMap';
+
+// Objeto de tradução
+const translations = {
+  pt: {
+    title: "Etapas de Craft",
+    step: "Etapa",
+    materials: "Matéria-prima necessária",
+    total: "Total de refino",
+    refines: "refinos"
+  },
+  en: {
+    title: "Crafting Steps",
+    step: "Step",
+    materials: "Required materials",
+    total: "Total refinements",
+    refines: "refines"
+  }
+};
 
 interface CraftingStepsProps {
   steps: CraftingStep[];
   itemInfoMap: Map<string, ItemInfo>;
+  language: 'pt' | 'en'; // <-- NOVA PROP
 }
 
-const CraftingSteps: React.FC<CraftingStepsProps> = ({ steps, itemInfoMap }) => {
+const CraftingSteps: React.FC<CraftingStepsProps> = ({ steps, itemInfoMap, language }) => {
+  const t = translations[language];
+
   return (
     <Stack spacing={3}>
       <Typography variant="h5" sx={{ textAlign: 'center', mb: 1 }}>
-        Etapas de Craft
+        {t.title} {/* <-- TRADUZIDO */}
       </Typography>
 
       {steps.map((step: CraftingStep, index: number) => {
         const stepInfo = itemInfoMap.get(step.itemName);
-        // Esta linha agora usa o 'colorMap' importado
         const stepBgColor = stepInfo ? colorMap[stepInfo.backgroundColor] : colorMap.default;
+        
+        // Define o nome da etapa (PT ou EN)
+        const stepName = stepInfo ? (language === 'pt' ? stepInfo.item : (stepInfo.en_name || stepInfo.item)) : step.itemName;
 
         return (
           <Paper key={step.itemName} elevation={2} sx={{ p: 2, overflow: 'hidden' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
               <Avatar src={stepInfo?.imagem} sx={{ backgroundColor: stepBgColor }} />
               <Typography variant="h6">
-                {`Etapa ${index + 1}: ${step.itemName}`}
+                {`${t.step} ${index + 1}: ${stepName}`} {/* <-- TRADUZIDO */}
               </Typography>
             </Box>
 
             <Typography variant="subtitle2" gutterBottom>
-              Matéria-prima necessária
+              {t.materials} {/* <-- TRADUZIDO */}
             </Typography>
             <TableContainer component={Paper} elevation={0} variant="outlined">
               <Table size="small">
                 <TableBody>
                   {step.ingredients.map((ing) => {
                     const ingInfo = itemInfoMap.get(ing.item);
-                    // Esta linha agora usa o 'colorMap' importado
                     const ingBgColor = ingInfo ? colorMap[ingInfo.backgroundColor] : colorMap.default;
+                    
+                    // Define o nome do ingrediente (PT ou EN)
+                    const ingName = ingInfo ? (language === 'pt' ? ingInfo.item : (ingInfo.en_name || ingInfo.item)) : ing.item;
 
                     return (
                       <TableRow key={ing.item}>
                         <TableCell sx={{ width: '50px' }}>
                           <Avatar src={ingInfo?.imagem} sx={{ width: 24, height: 24, backgroundColor: ingBgColor }} />
                         </TableCell>
-                        <TableCell>{ingInfo?.item || ing.item}</TableCell>
+                        <TableCell>{ingName}</TableCell> {/* <-- TRADUZIDO */}
                         <TableCell align="right">
                           {Math.ceil(ing.quantity).toLocaleString('pt-BR')}
                         </TableCell>
@@ -71,7 +84,7 @@ const CraftingSteps: React.FC<CraftingStepsProps> = ({ steps, itemInfoMap }) => 
             </TableContainer>
 
             <Typography variant="h6" align="right" sx={{ mt: 2 }}>
-              {`Total de refino: ${Math.ceil(step.craftsNeeded)} refinos`}
+              {`${t.total}: ${Math.ceil(step.craftsNeeded)} ${t.refines}`} {/* <-- TRADUZIDO */}
             </Typography>
           </Paper>
         );

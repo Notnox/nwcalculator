@@ -12,12 +12,26 @@ import ItemSelector from '../components/crafting/ItemSelector';
 import CraftingControls from '../components/crafting/CraftingControls';
 import BonusDetails from '../components/crafting/BonusDetails';
 import CraftingSteps from '../components/crafting/CraftingSteps';
+import { useApp } from '../layout/MainLayout';
 
 interface CraftingPageProps {
   module: CraftingModule;
 }
 
+const pageTitles = {
+  pt: {
+    refined: "Itens Refinados (Resumo)",
+    base: "Matéria-Prima (Resumo)"
+  },
+  en: {
+    refined: "Refined Items (Summary)",
+    base: "Raw Materials (Summary)"
+  }
+};
+
 const CraftingPage: React.FC<CraftingPageProps> = ({ module }) => {
+  const { language } = useApp();
+  const t = pageTitles[language];
   // --- STATE ---
   const [targetItemName, setTargetItemName] = useState(module.data.refinamentos[module.data.refinamentos.length - 1].item);
   const [quantity, setQuantity] = useState('1');
@@ -26,16 +40,9 @@ const CraftingPage: React.FC<CraftingPageProps> = ({ module }) => {
   const [fortBonus, setFortBonus] = useState(true);
 
   useEffect(() => {
-    // Define o item alvo para o item padrão do NOVO módulo
     setTargetItemName(module.data.refinamentos[module.data.refinamentos.length - 1].item);
-    
-    // Limpa os resultados e a quantidade
     setResults(null);
     setQuantity('1');
-
-    // Nota: Os bônus (clothes/fort) não são resetados
-    // para manter a preferência do usuário entre as profissões.
-
   }, [module]);
 
   // --- HANDLERS ---
@@ -71,23 +78,27 @@ const CraftingPage: React.FC<CraftingPageProps> = ({ module }) => {
   // --- DERIVED DATA ---
   const targetItemInfo = module.itemInfoMap.get(targetItemName);
   const colorKey = targetItemInfo?.backgroundColor || 'default';
-  // Esta linha agora usa o 'colorMap' importado
   const targetBgColor = colorMap[colorKey] || colorMap.default;
 
-  return (
+return (
     <>
       {/* Card Principal */}
       <Paper
         elevation={3}
-        sx={{ p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 4, overflow: 'hidden', backgroundColor: 'hsl(0, 0%, %)' }}
+        sx={{ p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 4, overflow: 'hidden' }}
       >
         <ItemSelector
           refinements={module.data.refinamentos}
           itemInfoMap={module.itemInfoMap}
           selectedItemName={targetItemName}
           onSelectItem={handleTargetItemChange}
+          language={language}
         />
 
+        {/* --- CORREÇÃO 1 AQUI --- */}
+        {/* Adicionamos 'moduleName' e 'moduleEnName' 
+           para traduzir os labels dos checkboxes.
+        */}
         <CraftingControls
           targetItemInfo={targetItemInfo}
           targetBgColor={targetBgColor}
@@ -98,12 +109,21 @@ const CraftingPage: React.FC<CraftingPageProps> = ({ module }) => {
           fortBonus={fortBonus}
           onFortChange={handleFortChange}
           onCalculate={handleCalculate}
+          language={language}
+          moduleName={module.data.name.pt_name}   // <-- PROPRIEDADE FALTANDO
+          moduleEnName={module.data.name.en_name} // <-- PROPRIEDADE FALTANDO
         />
 
+        {/* --- CORREÇÃO 2 AQUI --- */}
+        {/* Adicionamos 'itemInfoMap' 
+           para traduzir os nomes dos itens na tabela.
+        */}
         <BonusDetails
           recipes={module.data.receitas}
           clothesBonus={clothesBonus}
           fortBonus={fortBonus}
+          language={language}
+          itemInfoMap={module.itemInfoMap} // <-- PROPRIEDADE FALTANDO
         />
       </Paper>
 
@@ -112,16 +132,18 @@ const CraftingPage: React.FC<CraftingPageProps> = ({ module }) => {
         <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 3, mb: 4 }}>
           <Box sx={{ width: { xs: '100%', md: '50%' } }}>
             <ResultsList
-              title="Itens Refinados (Resumo)"
+              title={t.refined}
               itemsMap={results.refined}
               itemInfoMap={module.itemInfoMap} 
+              language={language}
             />
           </Box>
           <Box sx={{ width: { xs: '100%', md: '50%' } }}>
             <ResultsList
-              title="Matéria-Prima (Resumo)"
+              title={t.base}
               itemsMap={results.base}
               itemInfoMap={module.itemInfoMap} 
+              language={language}
             />
           </Box>
         </Box>
@@ -132,6 +154,7 @@ const CraftingPage: React.FC<CraftingPageProps> = ({ module }) => {
         <CraftingSteps
           steps={results.steps}
           itemInfoMap={module.itemInfoMap}
+          language={language}
         />
       )}
     </>
