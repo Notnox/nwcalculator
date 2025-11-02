@@ -9,6 +9,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { type PaletteMode } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import MatrixCalculatorPage from './pages/MatrixCalculatorPage';
+import RefiningHomePage from './pages/RefiningHomePage';
 
 const repoName = '/nwcalculator/';
 
@@ -105,6 +106,7 @@ return (
                 element={<CraftingPage module={module} />} 
               />
             ))}
+            <Route path="/refinos" element={<RefiningHomePage />} />
             <Route 
               path="/matrizes" 
               element={<MatrixCalculatorPage />}

@@ -1,7 +1,8 @@
 // src/pages/CraftingPage.tsx
 import React, { useEffect, useState } from 'react';
-import { Box, Paper } from '@mui/material';
+import { Box, Button, Paper } from '@mui/material';
 import { type CraftingModule } from '../types/craftingTypes';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {
   calculateRequirements,
   type Requirements,
@@ -13,6 +14,7 @@ import CraftingControls from '../components/crafting/CraftingControls';
 import BonusDetails from '../components/crafting/BonusDetails';
 import CraftingSteps from '../components/crafting/CraftingSteps';
 import { useApp } from '../layout/MainLayout';
+import { useNavigate } from 'react-router-dom';
 
 interface CraftingPageProps {
   module: CraftingModule;
@@ -21,17 +23,20 @@ interface CraftingPageProps {
 const pageTitles = {
   pt: {
     refined: "Itens Refinados (Resumo)",
-    base: "Matéria-Prima (Resumo)"
+    base: "Matéria-Prima (Resumo)",
+    back: "Voltar para Seleção"
   },
   en: {
     refined: "Refined Items (Summary)",
-    base: "Raw Materials (Summary)"
+    base: "Raw Materials (Summary)",
+    back: "Back to Selection"
   }
 };
 
 const CraftingPage: React.FC<CraftingPageProps> = ({ module }) => {
   const { language } = useApp();
   const t = pageTitles[language];
+  const navigate = useNavigate();
   // --- STATE ---
   const [targetItemName, setTargetItemName] = useState(module.data.refinamentos[module.data.refinamentos.length - 1].item);
   const [quantity, setQuantity] = useState('1');
@@ -87,6 +92,15 @@ return (
         elevation={3}
         sx={{ p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 4, overflow: 'hidden' }}
       >
+        <Box sx={{ width: '100%', textAlign: 'left', mb: 2 }}>
+          <Button
+            startIcon={<ArrowBackIcon />}
+            // Navega de volta para a página de seleção de refino
+            onClick={() => navigate('/refinos')} 
+          >
+            {t.back}
+          </Button>
+        </Box>
         <ItemSelector
           refinements={module.data.refinamentos}
           itemInfoMap={module.itemInfoMap}

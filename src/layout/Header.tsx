@@ -1,17 +1,17 @@
 // src/layout/Header.tsx
-import React, { useState } from 'react';
-import {
-  AppBar, Toolbar, Typography, Button, Box, Avatar, IconButton,
-  Menu, MenuItem, ListItemIcon, ListItemText // <-- Novos imports
+import React, { useState } from 'react'; // <-- useState não é mais necessário para os menus
+import { 
+  AppBar, Toolbar, Typography, Button, Box, Avatar, IconButton, 
+  Menu, MenuItem, ListItemIcon, ListItemText // <-- Vários destes não são mais necessários
 } from '@mui/material';
-import { Link as RouterLink, useNavigate } from 'react-router-dom'; // <-- Importar useNavigate
-import { modules } from '../data/modules';
+import { Link as RouterLink } from 'react-router-dom'; // <-- useNavigate não é mais necessário
+// import { modules } from '../data/modules'; // <-- Não é mais necessário aqui
 
 // --- ÍCONES ---
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import LanguageIcon from '@mui/icons-material/Language';
-import SettingsIcon from '@mui/icons-material/Settings'; // <-- Ícone de Engrenagem
+import SettingsIcon from '@mui/icons-material/Settings'; 
 
 // --- Props (sem alteração) ---
 interface HeaderProps {
@@ -21,18 +21,18 @@ interface HeaderProps {
   setLanguage: (lang: 'pt' | 'en') => void;
 }
 
-// --- Objeto de Traduções para o Header ---
+// --- Objeto de Traduções (com 'matrix' adicionado) ---
 const translations = {
   pt: {
-    matrix: "Calc Matriz",
     refining: "Calc Refinos",
+    matrix: "Calc Matriz", // <-- NOVO
     settings: "Configurações",
     theme: "Mudar Tema",
     language: "Idioma"
   },
   en: {
-    matrix: "Calc Matrix",
     refining: "Refining Calcs",
+    matrix: "Calc Matrix", // <-- NOVO
     settings: "Settings",
     theme: "Toggle Theme",
     language: "Language"
@@ -40,49 +40,30 @@ const translations = {
 };
 
 function Header({ mode, toggleTheme, language, setLanguage }: HeaderProps) {
-  const navigate = useNavigate();
   const t = translations[language]; // Pega o texto (pt ou en)
   
-  // --- ESTADOS DOS MENUS ---
-  // Criamos um estado de "âncora" para cada menu
-  const [anchorElRefining, setAnchorElRefining] = useState<null | HTMLElement>(null);
+  // --- ESTADOS DOS MENUS (MUITA COISA REMOVIDA) ---
+  // Removemos 'anchorElRefining' e 'anchorElMatrix'
   const [anchorElSettings, setAnchorElSettings] = useState<null | HTMLElement>(null);
   const [anchorElLang, setAnchorElLang] = useState<null | HTMLElement>(null);
 
-  // --- Handlers do Menu de Refino ---
-  const handleRefiningClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElRefining(event.currentTarget);
-  };
-  const handleRefiningClose = () => {
-    setAnchorElRefining(null);
-  };
-  const handleRefiningSelect = (path: string) => {
-    navigate(path);
-    handleRefiningClose();
-  };
+  // --- Handlers (Removemos os de Refino e Matriz) ---
 
   // --- Handlers do Menu de Configurações ---
-  const handleSettingsClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElSettings(event.currentTarget);
-  };
-  const handleSettingsClose = () => {
-    setAnchorElSettings(null);
-  };
+  const handleSettingsClick = (event: React.MouseEvent<HTMLElement>) => { setAnchorElSettings(event.currentTarget); };
+  const handleSettingsClose = () => { setAnchorElSettings(null); };
 
   // --- Handlers do Sub-menu de Idioma ---
   const handleLanguageClick = (event: React.MouseEvent<HTMLElement>) => {
-    // Abre o menu de idioma e fecha o de configurações
     setAnchorElLang(event.currentTarget);
     handleSettingsClose(); 
   };
-  const handleLanguageClose = () => {
-    setAnchorElLang(null);
-  };
+  const handleLanguageClose = () => { setAnchorElLang(null); };
   const handleLanguageSelect = (lang: 'pt' | 'en') => {
     setLanguage(lang);
     handleLanguageClose();
   };
-  // --- FIM DOS ESTADOS E HANDLERS ---
+  // --- FIM DAS REMOÇÕES ---
 
   return (
     <AppBar position="fixed" color="primary" sx={{ backgroundColor: '#1f1f1f' }}>
@@ -100,8 +81,10 @@ function Header({ mode, toggleTheme, language, setLanguage }: HeaderProps) {
           New World Calc
         </Typography>
 
-        {/* --- BARRA DE AÇÕES (DIREITA) --- */}
+        {/* --- BARRA DE AÇÕES (DIREITA) ATUALIZADA --- */}
         <Box>
+          
+          {/* 2. BOTÃO DE MATRIZ (Agora é um Link) */}
           <Button
             color="inherit"
             component={RouterLink}
@@ -109,14 +92,16 @@ function Header({ mode, toggleTheme, language, setLanguage }: HeaderProps) {
           >
             {t.matrix}
           </Button>
+
           <Button
             color="inherit"
-            onClick={handleRefiningClick}
+            component={RouterLink}
+            to="/refinos"
           >
             {t.refining}
           </Button>
 
-          {/* 2. BOTÃO DE CONFIGURAÇÕES (SEU "SPEED DIAL" DE ENGRENAGEM) */}
+          {/* 3. BOTÃO DE CONFIGURAÇÕES (Menu - sem alteração) */}
           <IconButton
             color="inherit"
             onClick={handleSettingsClick}
@@ -127,40 +112,14 @@ function Header({ mode, toggleTheme, language, setLanguage }: HeaderProps) {
         </Box>
       </Toolbar>
 
-      {/* --- MENUS (FICAM ESCONDIDOS ATÉ SEREM ACIONADOS) --- */}
+      {/* --- MENUS (Refino e Matriz REMOVIDOS) --- */}
 
-      {/* 1. MENU DE REFINO */}
-      <Menu
-        anchorEl={anchorElRefining}
-        open={Boolean(anchorElRefining)}
-        onClose={handleRefiningClose}
-      >
-        {modules.map((module) => (
-          <MenuItem 
-            key={module.id} 
-            onClick={() => handleRefiningSelect(`/${module.id}`)}
-          >
-            {/* Layout (Avatar) Texto */}
-            <ListItemIcon>
-              <Avatar 
-                src={module.data.name.imagem} 
-                sx={{ width: 28, height: 28, backgroundColor: '#000' }} 
-              />
-            </ListItemIcon>
-            <ListItemText>
-              {language === 'pt' ? module.title : module.data.name.en_name}
-            </ListItemText>
-          </MenuItem>
-        ))}
-      </Menu>
-
-      {/* 2. MENU DE CONFIGURAÇÕES */}
+      {/* 1. MENU DE CONFIGURAÇÕES (Sem alteração) */}
       <Menu
         anchorEl={anchorElSettings}
         open={Boolean(anchorElSettings)}
         onClose={handleSettingsClose}
       >
-        {/* Ação 1: Mudar Tema */}
         <MenuItem onClick={() => { toggleTheme(); handleSettingsClose(); }}>
           <ListItemIcon>
             {mode === 'dark' ? <Brightness7Icon fontSize="small" /> : <Brightness4Icon fontSize="small" />}
@@ -168,7 +127,6 @@ function Header({ mode, toggleTheme, language, setLanguage }: HeaderProps) {
           <ListItemText>{t.theme}</ListItemText>
         </MenuItem>
         
-        {/* Ação 2: Abrir Menu de Idioma */}
         <MenuItem onClick={handleLanguageClick}>
           <ListItemIcon>
             <LanguageIcon fontSize="small" />
@@ -177,22 +135,16 @@ function Header({ mode, toggleTheme, language, setLanguage }: HeaderProps) {
         </MenuItem>
       </Menu>
 
-      {/* 3. SUB-MENU DE IDIOMA */}
+      {/* 2. SUB-MENU DE IDIOMA (Sem alteração) */}
       <Menu
         anchorEl={anchorElLang}
         open={Boolean(anchorElLang)}
         onClose={handleLanguageClose}
       >
-        <MenuItem 
-          onClick={() => handleLanguageSelect('pt')}
-          selected={language === 'pt'}
-        >
+        <MenuItem onClick={() => handleLanguageSelect('pt')} selected={language === 'pt'}>
           Português (PT)
         </MenuItem>
-        <MenuItem 
-          onClick={() => handleLanguageSelect('en')}
-          selected={language === 'en'}
-        >
+        <MenuItem onClick={() => handleLanguageSelect('en')} selected={language === 'en'}>
           English (EN)
         </MenuItem>
       </Menu>

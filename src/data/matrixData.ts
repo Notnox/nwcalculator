@@ -12,7 +12,7 @@ const material_base: ItemInfo[] = [
   {item: "Azoth", en_name: "Azoth", imagem: "https://nwdb.info/images/db/currency_azoth.png", backgroundColor: "cinza"},
   {item: "Alkahest Infusa", en_name: "Infused Alkahest", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/potionpurplet5.png", backgroundColor: "cinza", price: 0},
   {item: "Pó de Gema Poderoso", en_name: "Powerful Gemstone Dust", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/consumable/gemstonedustt5.png", backgroundColor: "cinza", price: 0},
-  {item: "Orbe de Gipsita", en_name: "Gypsum Orb", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/gypsumorb.png", backgroundColor: "roxo"},
+  {item: "Orbe de Gipsita", en_name: "Gypsum Orb", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/gypsumorb.png", backgroundColor: "roxo", price: 0},
   {item: "Lingote Prismático", en_name: "Prismatic Ingot", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/ingott53.png", backgroundColor: "laranja", price: 0},
   {item: "Couro Prismático", en_name: "Prismatic Leather", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/leathert53.png", backgroundColor: "laranja", price: 0},
   {item: "Tábua Prismática", en_name: "Prismatic Wood", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/timbert53.png", backgroundColor: "laranja", price: 0},
