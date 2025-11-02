@@ -39,6 +39,6 @@ export interface CraftingModule {
   id: string; // ex: "cantaria"
   title: string; // ex: "Cantaria"
   data: CraftingData;
-  recipeMap: Map<string, Recipe>;
+  recipeMap: Map<string, Recipe[]>;
   itemInfoMap: Map<string, ItemInfo>;
 }

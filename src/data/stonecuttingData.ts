@@ -48,9 +48,14 @@ const stonecuttingData: CraftingData = {
 // --- Helper Maps (com tipagem) ---
 
 // Map<string, Recipe> -> Um Map onde a chave é string e o valor é uma Recipe
-const recipeMap = new Map<string, Recipe>(
-  stonecuttingData.receitas.map(recipe => [recipe.item, recipe])
-);
+const recipeMap = new Map<string, Recipe[]>();
+stonecuttingData.receitas.forEach(recipe => {
+  if (!recipeMap.has(recipe.item)) {
+    recipeMap.set(recipe.item, []);
+  }
+  recipeMap.get(recipe.item)!.push(recipe);
+});
+// --- FIM DO AJUSTE ---
 
 const allItems: ItemInfo[] = [
   ...stonecuttingData.material_base,
@@ -60,7 +65,7 @@ const itemInfoMap = new Map<string, ItemInfo>(
   allItems.map(item => [item.item, item])
 );
 
-// Adicionando item "virtual" (note que ele segue a interface ItemInfo)
+// Adicionando item "virtual"
 itemInfoMap.set(
   "Magnetita Derretida ou Magnetita Congelante ou Magnetita Pútrida ou Magnetita Cristalina ou Magnetita Argilosa ou Magnetita Chocante ou Magnetita Reluzente",
   {

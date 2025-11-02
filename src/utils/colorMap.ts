@@ -16,5 +16,5 @@ export const colorMap: Record<string, string> = {
   roxo: '#512888',  
   
   // Fallback
-  default: '#607d8b',
+  default: '#000',
 };

@@ -37,9 +37,14 @@ const woodworkingData: CraftingData = {
 };
 
 // --- Helpers (internos do módulo) ---
-const recipeMap = new Map<string, Recipe>(
-  woodworkingData.receitas.map(recipe => [recipe.item, recipe])
-);
+const recipeMap = new Map<string, Recipe[]>();
+woodworkingData.receitas.forEach(recipe => {
+  if (!recipeMap.has(recipe.item)) {
+    recipeMap.set(recipe.item, []);
+  }
+  recipeMap.get(recipe.item)!.push(recipe);
+});
+// --- FIM DO AJUSTE ---
 
 const allItems: ItemInfo[] = [
   ...woodworkingData.material_base,

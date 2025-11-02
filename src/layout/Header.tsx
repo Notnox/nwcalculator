@@ -24,12 +24,14 @@ interface HeaderProps {
 // --- Objeto de Traduções para o Header ---
 const translations = {
   pt: {
+    matrix: "Calc Matriz",
     refining: "Calc Refinos",
     settings: "Configurações",
     theme: "Mudar Tema",
     language: "Idioma"
   },
   en: {
+    matrix: "Calc Matrix",
     refining: "Refining Calcs",
     settings: "Settings",
     theme: "Toggle Theme",
@@ -100,7 +102,13 @@ function Header({ mode, toggleTheme, language, setLanguage }: HeaderProps) {
 
         {/* --- BARRA DE AÇÕES (DIREITA) --- */}
         <Box>
-          {/* 1. BOTÃO DE REFINO (SEU "SPEED DIAL" DE REFINOS) */}
+          <Button
+            color="inherit"
+            component={RouterLink}
+            to="/matrizes"
+          >
+            {t.matrix}
+          </Button>
           <Button
             color="inherit"
             onClick={handleRefiningClick}

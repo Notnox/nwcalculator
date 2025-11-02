@@ -37,9 +37,14 @@ const leatherworkingData: CraftingData = {
 };
 
 // --- Helpers (internos do módulo) ---
-const recipeMap = new Map<string, Recipe>(
-  leatherworkingData.receitas.map(recipe => [recipe.item, recipe])
-);
+const recipeMap = new Map<string, Recipe[]>();
+leatherworkingData.receitas.forEach(recipe => {
+  if (!recipeMap.has(recipe.item)) {
+    recipeMap.set(recipe.item, []);
+  }
+  recipeMap.get(recipe.item)!.push(recipe);
+});
+// --- FIM DO AJUSTE ---
 
 const allItems: ItemInfo[] = [
   ...leatherworkingData.material_base,

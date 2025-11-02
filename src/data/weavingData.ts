@@ -37,9 +37,14 @@ const weavingData: CraftingData = {
   ]
 };
 
-const recipeMap = new Map<string, Recipe>(
-  weavingData.receitas.map(recipe => [recipe.item, recipe])
-);
+const recipeMap = new Map<string, Recipe[]>();
+weavingData.receitas.forEach(recipe => {
+  if (!recipeMap.has(recipe.item)) {
+    recipeMap.set(recipe.item, []);
+  }
+  recipeMap.get(recipe.item)!.push(recipe);
+});
+// --- FIM DO AJUSTE ---
 
 const allItems: ItemInfo[] = [
   ...weavingData.material_base,

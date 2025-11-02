@@ -37,9 +37,14 @@ const smeltingData: CraftingData = {
   ]
 };
 
-const recipeMap = new Map<string, Recipe>(
-  smeltingData.receitas.map(recipe => [recipe.item, recipe])
-);
+const recipeMap = new Map<string, Recipe[]>();
+smeltingData.receitas.forEach(recipe => {
+  if (!recipeMap.has(recipe.item)) {
+    recipeMap.set(recipe.item, []);
+  }
+  recipeMap.get(recipe.item)!.push(recipe);
+});
+// --- FIM DO AJUSTE ---
 
 const allItems: ItemInfo[] = [
   ...smeltingData.material_base,
@@ -49,11 +54,7 @@ const itemInfoMap = new Map<string, ItemInfo>(
   allItems.map(item => [item.item, item])
 );
 
-// Nota: Este módulo não parece ter ingredientes "virtuais" ou "OU",
-// então não precisamos adicionar nenhum item extra ao itemInfoMap.
-
 // --- Exportação Principal ---
-// Exportamos um único objeto que contém TUDO que a página precisa
 export const smeltingModule: CraftingModule = {
   id: "fundicao", // O 'path' da URL
   title: "Fundição", // O texto do link no Header
