@@ -1,24 +1,23 @@
-// src/components/ResultsList.tsx
 import React from 'react';
 import { List, ListItem, ListItemAvatar, Avatar, ListItemText, Typography, Paper } from '@mui/material';
 import { type ItemInfo } from '../types/craftingTypes';
 import { colorMap } from '../utils/colorMap';
+import { useSettings } from '../contexts/SettingsContext';
 
 interface ResultsListProps {
   title: string;
   itemsMap: Map<string, number>;
   itemInfoMap: Map<string, ItemInfo>;
-  language: 'pt' | 'en'; // <-- NOVA PROP
 }
 
-const ResultsList: React.FC<ResultsListProps> = ({ title, itemsMap, itemInfoMap, language }) => {
+const ResultsList: React.FC<ResultsListProps> = ({ title, itemsMap, itemInfoMap }) => {
+  const { language } = useSettings(); 
   
   const itemsArray = Array.from(itemsMap.entries());
   itemsArray.sort((a, b) => b[1] - a[1]);
 
   return (
     <Paper elevation={2} sx={{ p: 2, height: '100%' }}>
-      {/* O 'title' já vem traduzido da CraftingPage */}
       <Typography variant="h6" gutterBottom>
         {title}
       </Typography>
@@ -30,7 +29,6 @@ const ResultsList: React.FC<ResultsListProps> = ({ title, itemsMap, itemInfoMap,
           const colorKey = info?.backgroundColor || 'default';
           const bgColor = colorMap[colorKey] || colorMap.default;
 
-          // Define o nome (PT ou EN)
           const name = info ? (language === 'pt' ? info.item : (info.en_name || info.item)) : itemName;
 
           return (

@@ -1,4 +1,3 @@
-// src/components/matrix/RecipeOptionsDisplay.tsx
 import React, { useMemo } from 'react';
 import { 
   Box, Paper, Typography, Avatar, TableContainer, 
@@ -7,13 +6,16 @@ import {
 import { itemInfoMap, recipeMap } from '../../data/matrixData';
 import { colorMap } from '../../utils/colorMap';
 import { type Recipe } from '../../types/craftingTypes';
+import { useSettings } from '../../contexts/SettingsContext';
 
 interface RecipeOptionsDisplayProps {
   recipes: Recipe[];
-  language: 'pt' | 'en';
 }
 
-const RecipeOptionsDisplay: React.FC<RecipeOptionsDisplayProps> = ({ recipes, language }) => {
+const RecipeOptionsDisplay: React.FC<RecipeOptionsDisplayProps> = ({ recipes }) => {
+  
+  const { language } = useSettings();
+  
   const t = language === 'pt' ? {
       ingredients: "Ingredientes Necessários:",
       via: "Via",
@@ -35,13 +37,11 @@ const RecipeOptionsDisplay: React.FC<RecipeOptionsDisplayProps> = ({ recipes, la
       const subRecipes = recipeMap.get(itemName);
       
       if (subRecipes && subRecipes.length > 0) {
-        // É um item refinado (ex: "Cabo Encantado").
         const subRecipe = subRecipes[0];
         for (const ing of subRecipe.ingredientes) {
           findBase(ing.item, ing.quantidade * quantity);
         }
       } else {
-        // É um material base (ex: "Lingote Prismático", "Azoth").
         const currentQty = summaryMap.get(itemName) || 0;
         summaryMap.set(itemName, currentQty + quantity);
       }
@@ -61,19 +61,16 @@ const RecipeOptionsDisplay: React.FC<RecipeOptionsDisplayProps> = ({ recipes, la
           const skillName = language === 'pt' ? recipe.pt_trade_skill : recipe.en_trade_skill;
           const skillIcon = recipe.trade_skill_icon;
 
-          // 1. CALCULA O RESUMO (para esta receita)
           const summaryMap = useMemo(() => aggregateBaseMaterials(recipe), [recipe]);
           const summaryArray = Array.from(summaryMap.entries());
 
           return (
             <Paper key={index} elevation={0} variant="outlined" sx={{ p: { xs: 1, sm: 3 } }}>
-              {/* Cabeçalho (Ex: "Via Armaria") */}
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2, p: 1.5, bgcolor: 'action.hover', borderRadius: 1 }}>
                   <Avatar src={skillIcon} sx={{ backgroundColor: colorMap[info?.backgroundColor || 'default'] }} />
                   <Typography variant="h5">{`${t.via} ${skillName}`}</Typography>
               </Box>
               
-              {/* 2. TABELA DE INGREDIENTES (COM SUB-LISTA) */}
               <Typography variant="subtitle2" gutterBottom>{t.ingredients}</Typography>
               <TableContainer component={Paper} elevation={0} variant="outlined">
                   <Table size="small">
@@ -85,7 +82,6 @@ const RecipeOptionsDisplay: React.FC<RecipeOptionsDisplayProps> = ({ recipes, la
 
                               return (
                                 <React.Fragment key={ing.item}>
-                                  {/* A. LINHA DO INGREDIENTE PRINCIPAL (Ex: Cabo Encantado) */}
                                   <TableRow>
                                       <TableCell sx={{ width: '50px' }}>
                                           <Avatar src={ingInfo?.imagem} sx={{ width: 24, height: 24, backgroundColor: colorMap[ingInfo?.backgroundColor || 'default'] }} />
@@ -98,14 +94,13 @@ const RecipeOptionsDisplay: React.FC<RecipeOptionsDisplayProps> = ({ recipes, la
                                       <TableCell align="right">{`${ing.quantidade.toLocaleString('pt-BR')} un`}</TableCell>
                                   </TableRow>
                                   
-                                  {/* B. SUB-LISTA (Se existir) */}
                                   {subRecipe && subRecipe.ingredientes.map(subIng => {
                                     const subIngInfo = itemInfoMap.get(subIng.item);
                                     const subName = language === 'pt' ? subIngInfo?.item : (subIngInfo?.en_name || subIngInfo?.item);
                                     
                                     return (
                                       <TableRow key={subIng.item}>
-                                        <TableCell sx={{ pl: 4 }}> {/* Padding para hierarquia */}
+                                        <TableCell sx={{ pl: 4 }}>
                                           <Avatar src={subIngInfo?.imagem} sx={{ width: 20, height: 20, backgroundColor: colorMap[subIngInfo?.backgroundColor || 'default'] }} />
                                         </TableCell>
                                         <TableCell>
@@ -126,7 +121,6 @@ const RecipeOptionsDisplay: React.FC<RecipeOptionsDisplayProps> = ({ recipes, la
                   </Table>
               </TableContainer>
 
-              {/* 3. TABELA DE RESUMO DE MATÉRIA-PRIMA */}
               <Typography variant="subtitle2" gutterBottom sx={{ mt: 2 }}>
                 {t.summary}
               </Typography>

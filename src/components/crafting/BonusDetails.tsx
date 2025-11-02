@@ -1,13 +1,12 @@
-// src/components/crafting/BonusDetails.tsx
 import React from 'react';
 import {
   Accordion, AccordionSummary, AccordionDetails, TableContainer,
   Table, TableHead, TableBody, TableRow, TableCell, Typography,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { type Recipe, type ItemInfo } from '../../types/craftingTypes'; // <-- Importar ItemInfo
+import { type Recipe, type ItemInfo } from '../../types/craftingTypes';
+import { useSettings } from '../../contexts/SettingsContext';
 
-// Objeto de tradução
 const translations = {
   pt: {
     title: "Detalhes das Chances de Bônus",
@@ -31,24 +30,24 @@ interface BonusDetailsProps {
   recipes: Recipe[];
   clothesBonus: boolean;
   fortBonus: boolean;
-  language: 'pt' | 'en';        // <-- NOVA PROP
-  itemInfoMap: Map<string, ItemInfo>; // <-- NOVA PROP
+  itemInfoMap: Map<string, ItemInfo>; 
 }
 
 const BonusDetails: React.FC<BonusDetailsProps> = ({ 
   recipes, 
   clothesBonus, 
   fortBonus, 
-  language, 
   itemInfoMap 
 }) => {
+  
+  const { language } = useSettings();
   const t = translations[language];
 
   return (
     <Accordion elevation={0} sx={{ width: '100%', borderTop: 1, borderColor: 'divider' }}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ minHeight: 'auto', '&.Mui-expanded': { minHeight: 'auto' }, py: 1 }}>
         <Typography variant="subtitle2" sx={{ textAlign: 'center', width: '100%' }}>
-          {t.title} {/* <-- TRADUZIDO */}
+          {t.title} 
         </Typography>
       </AccordionSummary>
       <AccordionDetails sx={{ p: 0 }}>
@@ -70,13 +69,12 @@ const BonusDetails: React.FC<BonusDetailsProps> = ({
                 const currentFortBonus = fortBonus ? 10 : 0;
                 const totalChance = baseChance + currentClothesBonus + currentFortBonus;
 
-                // Pega a info do item para tradução
                 const info = itemInfoMap.get(recipe.item);
                 const itemName = info ? (language === 'pt' ? info.item : (info.en_name || info.item)) : recipe.item;
 
                 return (
                   <TableRow key={recipe.item}>
-                    <TableCell component="th" scope="row">{itemName}</TableCell> {/* <-- TRADUZIDO */}
+                    <TableCell component="th" scope="row">{itemName}</TableCell> 
                     <TableCell align="right">{`${baseChance}%`}</TableCell>
                     <TableCell align="right">{`${currentClothesBonus}%`}</TableCell>
                     <TableCell align="right">{`${currentFortBonus}%`}</TableCell>

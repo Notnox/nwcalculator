@@ -1,10 +1,9 @@
-// src/components/crafting/ItemSelector.tsx
 import React from 'react';
 import { Box, Typography, Stack, Tooltip, IconButton, Avatar } from '@mui/material';
 import { type ItemInfo } from '../../types/craftingTypes';
 import { colorMap } from '../../utils/colorMap';
+import { useSettings } from '../../contexts/SettingsContext';
 
-// Objeto de tradução
 const translations = {
   pt: { select: "Selecione o item para calcular:" },
   en: { select: "Select item to calculate:" },
@@ -15,7 +14,6 @@ interface ItemSelectorProps {
   itemInfoMap: Map<string, ItemInfo>;
   selectedItemName: string;
   onSelectItem: (itemName: string) => void;
-  language: 'pt' | 'en'; // <-- NOVA PROP
 }
 
 const ItemSelector: React.FC<ItemSelectorProps> = ({
@@ -23,14 +21,15 @@ const ItemSelector: React.FC<ItemSelectorProps> = ({
   itemInfoMap,
   selectedItemName,
   onSelectItem,
-  language, // <-- PROP EM USO
 }) => {
-  const t = translations[language]; // Pega o texto (pt ou en)
+  
+  const { language } = useSettings();
+  const t = translations[language]; 
 
   return (
     <Box sx={{ width: '100%', mb: 3, borderBottom: 1, borderColor: 'divider', pb: 3 }}>
       <Typography variant="caption" display="block" sx={{ textAlign: 'center', color: 'text.secondary', mb: 1.5 }}>
-        {t.select} {/* <-- TRADUZIDO */}
+        {t.select} 
       </Typography>
       <Stack direction="row" spacing={1} justifyContent="center" flexWrap="wrap" sx={{ rowGap: 1 }}>
         {refinements.map((item) => {
@@ -39,7 +38,6 @@ const ItemSelector: React.FC<ItemSelectorProps> = ({
           const colorKey = info?.backgroundColor || 'default';
           const bgColor = colorMap[colorKey] || colorMap.default;
           
-          // Define o nome do tooltip (PT ou EN)
           const tooltipName = language === 'pt' ? item.item : (item.en_name || item.item);
 
           return (

@@ -1,27 +1,26 @@
-// src/components/matrix/Step1SelectMatrix.tsx
 import React from 'react';
-// --- MUDANÇA 1: Adicionei 'Tooltip' que estava faltando no seu upload ---
 import { Card, CardActionArea, Avatar, Typography, Box, Button, Tooltip } from '@mui/material';
-// Importa os dados DIRETAMENTE do arquivo de dados da matriz
 import { matrixList, itemInfoMap } from '../../data/matrixData'; 
 import { colorMap } from '../../utils/colorMap';
+import { useSettings } from '../../contexts/SettingsContext';
 
 interface Step1Props {
-  language: 'pt' | 'en';
   selectedMatrix: string | null;
   onSelectMatrix: (name: string) => void;
   onNext: () => void;
-  onSelectAndNext: (name: string) => void; // Para o double-click
+  onSelectAndNext: (name: string) => void; 
 }
 
-const Step1SelectMatrix: React.FC<Step1Props> = ({ language, selectedMatrix, onSelectMatrix, onNext, onSelectAndNext }) => {
+const Step1SelectMatrix: React.FC<Step1Props> = ({ selectedMatrix, onSelectMatrix, onNext, onSelectAndNext }) => {
+  
+  const { language } = useSettings(); 
   
   const handleSelect = (name: string) => {
     onSelectMatrix(name);
   };
   
   const handleDoubleClick = (name: string) => {
-    onSelectAndNext(name); // Seta e avança
+    onSelectAndNext(name); 
   };
 
   const t = language === 'pt' ? {
@@ -52,23 +51,14 @@ const Step1SelectMatrix: React.FC<Step1Props> = ({ language, selectedMatrix, onS
           const name = language === 'pt' ? info?.item : (info?.en_name || info?.item);
           
           return (
-            // --- MUDANÇA 2: Tooltip adicionado ao redor do Card ---
             <Tooltip title={name} arrow key={item.item}>
               <Card 
-                elevation={isSelected ? 8 : 2} // A sombra/elevação que você gostou
+                elevation={isSelected ? 8 : 2} 
                 sx={{ 
-                  // --- MUDANÇA 3: Estilo de seleção atualizado ---
-                  
-                  // 1. A borda agora é 'success.main' (verde) quando selecionada
                   border: '2px solid',
                   borderColor: isSelected ? 'success.main' : 'transparent', 
-                  
-                  // 2. Adiciona um leve "pop" (zoom) para complementar a elevação
                   transform: isSelected ? 'scale(1.02)' : 'scale(1)',
-                  
-                  // 3. Suaviza a transição
                   transition: 'transform 0.15s ease-out, border-color 0.15s ease-out',
-                  // --- FIM DA MUDANÇA ---
                 }}
               >
                 <CardActionArea 
@@ -92,7 +82,6 @@ const Step1SelectMatrix: React.FC<Step1Props> = ({ language, selectedMatrix, onS
         })}
       </Box>
       
-      {/* Rodapé (sem alteração) */}
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', mt: 4 }}>
         <Typography variant="caption" sx={{ color: 'text.secondary', mr: 'auto' }}>
           {t.help}

@@ -1,59 +1,52 @@
-// src/layout/Header.tsx
-import React, { useState } from 'react'; // <-- useState não é mais necessário para os menus
+import React, { useState } from 'react';
 import { 
   AppBar, Toolbar, Typography, Button, Box, Avatar, IconButton, 
-  Menu, MenuItem, ListItemIcon, ListItemText // <-- Vários destes não são mais necessários
+  Menu, MenuItem, ListItemIcon, ListItemText 
 } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom'; // <-- useNavigate não é mais necessário
-// import { modules } from '../data/modules'; // <-- Não é mais necessário aqui
-
-// --- ÍCONES ---
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { modules } from '../data/modules';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import LanguageIcon from '@mui/icons-material/Language';
 import SettingsIcon from '@mui/icons-material/Settings'; 
+import { useSettings } from '../contexts/SettingsContext';
 
-// --- Props (sem alteração) ---
-interface HeaderProps {
-  mode: 'light' | 'dark';
-  toggleTheme: () => void;
-  language: 'pt' | 'en';
-  setLanguage: (lang: 'pt' | 'en') => void;
-}
-
-// --- Objeto de Traduções (com 'matrix' adicionado) ---
 const translations = {
   pt: {
     refining: "Refinos",
-    matrix: "Matriz", // <-- NOVO
+    matrix: "Matriz",
     settings: "Configurações",
     theme: "Mudar Tema",
     language: "Idioma"
   },
   en: {
     refining: "Refining",
-    matrix: "Matrix", // <-- NOVO
+    matrix: "Matrix",
     settings: "Settings",
     theme: "Toggle Theme",
     language: "Language"
   }
 };
 
-function Header({ mode, toggleTheme, language, setLanguage }: HeaderProps) {
-  const t = translations[language]; // Pega o texto (pt ou en)
+function Header() {
+  const { mode, toggleTheme, language, setLanguage } = useSettings();
+  const t = translations[language]; 
+  const navigate = useNavigate();
   
-  // --- ESTADOS DOS MENUS (MUITA COISA REMOVIDA) ---
-  // Removemos 'anchorElRefining' e 'anchorElMatrix'
+  const [anchorElRefining, setAnchorElRefining] = useState<null | HTMLElement>(null);
   const [anchorElSettings, setAnchorElSettings] = useState<null | HTMLElement>(null);
   const [anchorElLang, setAnchorElLang] = useState<null | HTMLElement>(null);
 
-  // --- Handlers (Removemos os de Refino e Matriz) ---
+  const handleRefiningClick = (event: React.MouseEvent<HTMLElement>) => { setAnchorElRefining(event.currentTarget); };
+  const handleRefiningClose = () => { setAnchorElRefining(null); };
+  const handleRefiningSelect = (path: string) => {
+    navigate(path);
+    handleRefiningClose();
+  };
 
-  // --- Handlers do Menu de Configurações ---
   const handleSettingsClick = (event: React.MouseEvent<HTMLElement>) => { setAnchorElSettings(event.currentTarget); };
   const handleSettingsClose = () => { setAnchorElSettings(null); };
 
-  // --- Handlers do Sub-menu de Idioma ---
   const handleLanguageClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElLang(event.currentTarget);
     handleSettingsClose(); 
@@ -63,7 +56,6 @@ function Header({ mode, toggleTheme, language, setLanguage }: HeaderProps) {
     setLanguage(lang);
     handleLanguageClose();
   };
-  // --- FIM DAS REMOÇÕES ---
 
   return (
     <AppBar position="fixed" color="primary" sx={{ backgroundColor: '#1f1f1f' }}>
@@ -81,10 +73,14 @@ function Header({ mode, toggleTheme, language, setLanguage }: HeaderProps) {
           New World Calc
         </Typography>
 
-        {/* --- BARRA DE AÇÕES (DIREITA) ATUALIZADA --- */}
         <Box>
-          
-          {/* 2. BOTÃO DE MATRIZ (Agora é um Link) */}
+          <Button
+            color="inherit"
+            onClick={handleRefiningClick}
+          >
+            {t.refining}
+          </Button>
+
           <Button
             color="inherit"
             component={RouterLink}
@@ -93,15 +89,6 @@ function Header({ mode, toggleTheme, language, setLanguage }: HeaderProps) {
             {t.matrix}
           </Button>
 
-          <Button
-            color="inherit"
-            component={RouterLink}
-            to="/refinos"
-          >
-            {t.refining}
-          </Button>
-
-          {/* 3. BOTÃO DE CONFIGURAÇÕES (Menu - sem alteração) */}
           <IconButton
             color="inherit"
             onClick={handleSettingsClick}
@@ -112,9 +99,29 @@ function Header({ mode, toggleTheme, language, setLanguage }: HeaderProps) {
         </Box>
       </Toolbar>
 
-      {/* --- MENUS (Refino e Matriz REMOVIDOS) --- */}
+      <Menu
+        anchorEl={anchorElRefining}
+        open={Boolean(anchorElRefining)}
+        onClose={handleRefiningClose}
+      >
+        {modules.map((module) => (
+          <MenuItem 
+            key={module.id} 
+            onClick={() => handleRefiningSelect(`/${module.id}`)}
+          >
+            <ListItemIcon>
+              <Avatar 
+                src={module.data.name.imagem} 
+                sx={{ width: 28, height: 28, backgroundColor: '#000' }} 
+              />
+            </ListItemIcon>
+            <ListItemText>
+              {language === 'pt' ? module.title : module.data.name.en_name}
+            </ListItemText>
+          </MenuItem>
+        ))}
+      </Menu>
 
-      {/* 1. MENU DE CONFIGURAÇÕES (Sem alteração) */}
       <Menu
         anchorEl={anchorElSettings}
         open={Boolean(anchorElSettings)}
@@ -135,7 +142,6 @@ function Header({ mode, toggleTheme, language, setLanguage }: HeaderProps) {
         </MenuItem>
       </Menu>
 
-      {/* 2. SUB-MENU DE IDIOMA (Sem alteração) */}
       <Menu
         anchorEl={anchorElLang}
         open={Boolean(anchorElLang)}

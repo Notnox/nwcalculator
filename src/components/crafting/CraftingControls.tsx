@@ -1,9 +1,8 @@
-// src/components/crafting/CraftingControls.tsx
 import React from 'react';
 import { Avatar, Typography, Stack, FormControlLabel, Checkbox, TextField, Button } from '@mui/material';
 import { type ItemInfo } from '../../types/craftingTypes';
+import { useSettings } from '../../contexts/SettingsContext';
 
-// --- ATUALIZADO: Novas traduções ---
 const translations = {
   pt: {
     clothes: "Roupa de",
@@ -13,14 +12,13 @@ const translations = {
     tip: "Dica: Para garantir que os materiais durem, siga a quantidade de 'Total de refino' de cada etapa."
   },
   en: {
-    clothes: "Gear", // Ex: "Stonecutting Gear"
+    clothes: "Gear", 
     fort: "Fort Bonus",
     quantity: "Quantity",
     calculate: "Calculate",
     tip: "Tip: To ensure materials last, follow the 'Total refinements' count for each step."
   }
 };
-// --- FIM DA ATUALIZAÇÃO ---
 
 interface CraftingControlsProps {
   targetItemInfo: ItemInfo | undefined;
@@ -32,7 +30,6 @@ interface CraftingControlsProps {
   fortBonus: boolean;
   onFortChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onCalculate: () => void;
-  language: 'pt' | 'en'; 
   moduleName: string;   
   moduleEnName: string;  
 }
@@ -47,10 +44,11 @@ const CraftingControls: React.FC<CraftingControlsProps> = ({
   fortBonus,
   onFortChange,
   onCalculate,
-  language,
   moduleName,
   moduleEnName,
 }) => {
+  
+  const { language } = useSettings();
   const t = translations[language];
 
   const itemName = targetItemInfo 
@@ -83,7 +81,6 @@ const CraftingControls: React.FC<CraftingControlsProps> = ({
         direction="row" 
         spacing={2} 
         alignItems="center" 
-        // --- ATUALIZADO: Reduzimos a margem de baixo do Stack ---
         sx={{ mt: 2, mb: 1 }}
       >
         <TextField
@@ -101,19 +98,17 @@ const CraftingControls: React.FC<CraftingControlsProps> = ({
         </Button>
       </Stack>
 
-      {/* --- NOVO: Mensagem sutil de dica --- */}
       <Typography 
         variant="caption" 
         color="text.secondary" 
         sx={{ 
           textAlign: 'center', 
-          mb: 3, // Esta margem agora empurra o Accordion
+          mb: 3,
           maxWidth: 400 
         }}
       >
         {t.tip}
       </Typography>
-      {/* --- FIM DA MUDANÇA --- */}
     </>
   );
 };

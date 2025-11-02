@@ -1,11 +1,10 @@
-// src/components/crafting/CraftingSteps.tsx
 import React from 'react';
 import { Stack, Typography, Paper, Box, Avatar, TableContainer, Table, TableBody, TableRow, TableCell } from '@mui/material';
 import { type CraftingStep } from '../../utils/craftCalculator';
 import { type ItemInfo } from '../../types/craftingTypes';
 import { colorMap } from '../../utils/colorMap';
+import { useSettings } from '../../contexts/SettingsContext'; 
 
-// Objeto de tradução
 const translations = {
   pt: {
     title: "Etapas de Craft",
@@ -26,23 +25,23 @@ const translations = {
 interface CraftingStepsProps {
   steps: CraftingStep[];
   itemInfoMap: Map<string, ItemInfo>;
-  language: 'pt' | 'en'; // <-- NOVA PROP
 }
 
-const CraftingSteps: React.FC<CraftingStepsProps> = ({ steps, itemInfoMap, language }) => {
+const CraftingSteps: React.FC<CraftingStepsProps> = ({ steps, itemInfoMap }) => {
+  
+  const { language } = useSettings();
   const t = translations[language];
 
   return (
     <Stack spacing={3}>
       <Typography variant="h5" sx={{ textAlign: 'center', mb: 1 }}>
-        {t.title} {/* <-- TRADUZIDO */}
+        {t.title} 
       </Typography>
 
       {steps.map((step: CraftingStep, index: number) => {
         const stepInfo = itemInfoMap.get(step.itemName);
         const stepBgColor = stepInfo ? colorMap[stepInfo.backgroundColor] : colorMap.default;
         
-        // Define o nome da etapa (PT ou EN)
         const stepName = stepInfo ? (language === 'pt' ? stepInfo.item : (stepInfo.en_name || stepInfo.item)) : step.itemName;
 
         return (
@@ -50,12 +49,12 @@ const CraftingSteps: React.FC<CraftingStepsProps> = ({ steps, itemInfoMap, langu
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
               <Avatar src={stepInfo?.imagem} sx={{ backgroundColor: stepBgColor }} />
               <Typography variant="h6">
-                {`${t.step} ${index + 1}: ${stepName}`} {/* <-- TRADUZIDO */}
+                {`${t.step} ${index + 1}: ${stepName}`} 
               </Typography>
             </Box>
 
             <Typography variant="subtitle2" gutterBottom>
-              {t.materials} {/* <-- TRADUZIDO */}
+              {t.materials} 
             </Typography>
             <TableContainer component={Paper} elevation={0} variant="outlined">
               <Table size="small">
@@ -64,7 +63,6 @@ const CraftingSteps: React.FC<CraftingStepsProps> = ({ steps, itemInfoMap, langu
                     const ingInfo = itemInfoMap.get(ing.item);
                     const ingBgColor = ingInfo ? colorMap[ingInfo.backgroundColor] : colorMap.default;
                     
-                    // Define o nome do ingrediente (PT ou EN)
                     const ingName = ingInfo ? (language === 'pt' ? ingInfo.item : (ingInfo.en_name || ingInfo.item)) : ing.item;
 
                     return (
@@ -72,7 +70,7 @@ const CraftingSteps: React.FC<CraftingStepsProps> = ({ steps, itemInfoMap, langu
                         <TableCell sx={{ width: '50px' }}>
                           <Avatar src={ingInfo?.imagem} sx={{ width: 24, height: 24, backgroundColor: ingBgColor }} />
                         </TableCell>
-                        <TableCell>{ingName}</TableCell> {/* <-- TRADUZIDO */}
+                        <TableCell>{ingName}</TableCell> 
                         <TableCell align="right">
                           {Math.ceil(ing.quantity).toLocaleString('pt-BR')}
                         </TableCell>
@@ -84,7 +82,7 @@ const CraftingSteps: React.FC<CraftingStepsProps> = ({ steps, itemInfoMap, langu
             </TableContainer>
 
             <Typography variant="h6" align="right" sx={{ mt: 2 }}>
-              {`${t.total}: ${Math.ceil(step.craftsNeeded)} ${t.refines}`} {/* <-- TRADUZIDO */}
+              {`${t.total}: ${Math.ceil(step.craftsNeeded)} ${t.refines}`} 
             </Typography>
           </Paper>
         );

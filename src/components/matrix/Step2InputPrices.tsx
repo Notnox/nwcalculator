@@ -1,13 +1,12 @@
-// src/components/matrix/Step2InputPrices.tsx
 import React, { useState, useEffect } from 'react';
 import { Box, Button, Table, TableBody, TableCell, TableContainer, TableRow, Avatar, TextField, Typography, Paper } from '@mui/material';
 import { itemInfoMap } from '../../data/matrixData';
 import { colorMap } from '../../utils/colorMap';
 import { type ItemInfo } from '../../types/craftingTypes';
+import { useSettings } from '../../contexts/SettingsContext';
 
 interface Step2Props {
-  language: 'pt' | 'en';
-  prices: Map<string, number>; // O estado "Pai" (Números)
+  prices: Map<string, number>; 
   onSetPrices: (newPrices: Map<string, number>) => void;
   onBack: () => void;
   onNext: () => void;
@@ -28,47 +27,35 @@ const numberMapToStringMap = (numMap: Map<string, number>): Map<string, string> 
 };
 
 const Step2InputPrices: React.FC<Step2Props> = ({ 
-  language, prices, onSetPrices, onBack, onNext,
+  prices, onSetPrices, onBack, onNext,
   selectedMatrix, priceableItems
 }) => {
   
+  const { language } = useSettings(); 
   const [localValues, setLocalValues] = useState(() => numberMapToStringMap(prices));
 
-  // --- CORREÇÃO AQUI ---
-  // A 'prop' prices foi REMOVIDA do array de dependência.
-  // Este useEffect agora SÓ roda se a LISTA de itens mudar (ex: trocar de Matriz),
-  // e não quando os VALORES mudam. Isso quebra o "ciclo vicioso".
   useEffect(() => {
     setLocalValues(numberMapToStringMap(prices));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [priceableItems]); 
-  // --- FIM DA CORREÇÃO ---
 
   const handlePriceChange = (itemName: string, value: string) => {
     
-    // 1. Normaliza: Aceita ponto ou vírgula, mas força vírgula
     let cleanValue = value.replace('.', ',');
-
-    // 2. Limpa: Remove tudo que não for dígito ou vírgula
     cleanValue = cleanValue.replace(/[^0-9,]/g, '');
 
-    // 3. Garante UMA vírgula
     const parts = cleanValue.split(',');
     if (parts.length > 2) {
       cleanValue = parts[0] + ',' + parts.slice(1).join('');
     }
 
-    // 4. GARANTE 2 CASAS DECIMAIS
     if (parts.length === 2 && parts[1].length > 2) {
       cleanValue = parts[0] + ',' + parts[1].substring(0, 2);
     }
     
-    // 5. Atualiza o estado local (o que o usuário vê na tela)
     const newLocalValues = new Map(localValues);
     newLocalValues.set(itemName, cleanValue);
     setLocalValues(newLocalValues);
 
-    // 6. Atualiza o estado pai (o número para o cálculo)
     const formattedForCalc = cleanValue.replace(',', '.');
     const newPrice = parseFloat(formattedForCalc);
     
@@ -102,7 +89,6 @@ const Step2InputPrices: React.FC<Step2Props> = ({
 
   return (
     <Box>
-      {/* Título (sem alteração) */}
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2, p: 1.5, bgcolor: 'action.hover', borderRadius: 1 }}>
         <Avatar 
           src={selectedMatrixInfo?.imagem}
@@ -168,7 +154,6 @@ const Step2InputPrices: React.FC<Step2Props> = ({
         </Table>
       </TableContainer>
 
-      {/* Botões e texto de ajuda (sem alteração) */}
       <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Button onClick={onBack}>
           {t.back}

@@ -1,4 +1,3 @@
-// src/pages/CraftingPage.tsx
 import React, { useEffect, useState } from 'react';
 import { Box, Button, Paper } from '@mui/material';
 import { type CraftingModule } from '../types/craftingTypes';
@@ -13,8 +12,9 @@ import ItemSelector from '../components/crafting/ItemSelector';
 import CraftingControls from '../components/crafting/CraftingControls';
 import BonusDetails from '../components/crafting/BonusDetails';
 import CraftingSteps from '../components/crafting/CraftingSteps';
-import { useApp } from '../layout/MainLayout';
 import { useNavigate } from 'react-router-dom';
+
+import { useSettings } from '../contexts/SettingsContext';
 
 interface CraftingPageProps {
   module: CraftingModule;
@@ -34,10 +34,9 @@ const pageTitles = {
 };
 
 const CraftingPage: React.FC<CraftingPageProps> = ({ module }) => {
-  const { language } = useApp();
+  const { language } = useSettings();
   const t = pageTitles[language];
   const navigate = useNavigate();
-  // --- STATE ---
   const [targetItemName, setTargetItemName] = useState(module.data.refinamentos[module.data.refinamentos.length - 1].item);
   const [quantity, setQuantity] = useState('1');
   const [results, setResults] = useState<Requirements | null>(null);
@@ -50,7 +49,6 @@ const CraftingPage: React.FC<CraftingPageProps> = ({ module }) => {
     setQuantity('1');
   }, [module]);
 
-  // --- HANDLERS ---
   const handleClothesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setClothesBonus(event.target.checked);
   };
@@ -80,14 +78,12 @@ const CraftingPage: React.FC<CraftingPageProps> = ({ module }) => {
     }
   };
 
-  // --- DERIVED DATA ---
   const targetItemInfo = module.itemInfoMap.get(targetItemName);
   const colorKey = targetItemInfo?.backgroundColor || 'default';
   const targetBgColor = colorMap[colorKey] || colorMap.default;
 
 return (
     <>
-      {/* Card Principal */}
       <Paper
         elevation={3}
         sx={{ p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 4, overflow: 'hidden' }}
@@ -95,7 +91,6 @@ return (
         <Box sx={{ width: '100%', textAlign: 'left', mb: 2 }}>
           <Button
             startIcon={<ArrowBackIcon />}
-            // Navega de volta para a página de seleção de refino
             onClick={() => navigate('/refinos')} 
           >
             {t.back}
@@ -106,13 +101,8 @@ return (
           itemInfoMap={module.itemInfoMap}
           selectedItemName={targetItemName}
           onSelectItem={handleTargetItemChange}
-          language={language}
         />
 
-        {/* --- CORREÇÃO 1 AQUI --- */}
-        {/* Adicionamos 'moduleName' e 'moduleEnName' 
-           para traduzir os labels dos checkboxes.
-        */}
         <CraftingControls
           targetItemInfo={targetItemInfo}
           targetBgColor={targetBgColor}
@@ -123,25 +113,18 @@ return (
           fortBonus={fortBonus}
           onFortChange={handleFortChange}
           onCalculate={handleCalculate}
-          language={language}
-          moduleName={module.data.name.pt_name}   // <-- PROPRIEDADE FALTANDO
-          moduleEnName={module.data.name.en_name} // <-- PROPRIEDADE FALTANDO
+          moduleName={module.data.name.pt_name}
+          moduleEnName={module.data.name.en_name}
         />
 
-        {/* --- CORREÇÃO 2 AQUI --- */}
-        {/* Adicionamos 'itemInfoMap' 
-           para traduzir os nomes dos itens na tabela.
-        */}
         <BonusDetails
           recipes={module.data.receitas}
           clothesBonus={clothesBonus}
           fortBonus={fortBonus}
-          language={language}
-          itemInfoMap={module.itemInfoMap} // <-- PROPRIEDADE FALTANDO
+          itemInfoMap={module.itemInfoMap}
         />
       </Paper>
 
-      {/* --- LISTAS DE RESUMO (SHOPPING LIST) --- */}
       {results && (
         <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 3, mb: 4 }}>
           <Box sx={{ width: { xs: '100%', md: '50%' } }}>
@@ -149,7 +132,6 @@ return (
               title={t.refined}
               itemsMap={results.refined}
               itemInfoMap={module.itemInfoMap} 
-              language={language}
             />
           </Box>
           <Box sx={{ width: { xs: '100%', md: '50%' } }}>
@@ -157,18 +139,15 @@ return (
               title={t.base}
               itemsMap={results.base}
               itemInfoMap={module.itemInfoMap} 
-              language={language}
             />
           </Box>
         </Box>
       )}
 
-      {/* --- ETAPAS DE CRAFT (MODO DE PREPARO) --- */}
       {results && results.steps.length > 0 && (
         <CraftingSteps
           steps={results.steps}
           itemInfoMap={module.itemInfoMap}
-          language={language}
         />
       )}
     </>

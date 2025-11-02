@@ -1,38 +1,18 @@
-// src/layout/MainLayout.tsx
-import { Outlet, useOutletContext } from 'react-router-dom'; // <-- Importar useOutletContext
+import { Outlet } from 'react-router-dom';
 import Header from './Header';
 import { Container } from '@mui/material';
-import { type AppContextType } from '../App'; // <-- Importar nosso tipo de contexto
 
-// --- NOVAS PROPS ---
-interface MainLayoutProps {
-  mode: 'light' | 'dark';
-  toggleTheme: () => void;
-  language: 'pt' | 'en';
-  setLanguage: (lang: 'pt' | 'en') => void;
-}
-
-function MainLayout({ mode, toggleTheme, language, setLanguage }: MainLayoutProps) {
+function MainLayout() {
   return (
     <>
-      <Header 
-        mode={mode} 
-        toggleTheme={toggleTheme}
-        language={language}
-        setLanguage={setLanguage}
-      />
-      
+      <Header />
       <Container component="main" sx={{ mt: 10, mb: 4 }}>
-        {/* Passa o idioma para todas as páginas (HomePage, CraftingPage) */}
-        <Outlet context={{ language } satisfies AppContextType} />
+        <Outlet />
       </Container>
     </>
   );
 }
 
-// Hook customizado para que as páginas acessem o contexto
-export function useApp() {
-  return useOutletContext<AppContextType>();
-}
+// --- REMOVEMOS: O hook 'useApp()' ---
 
 export default MainLayout;

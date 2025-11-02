@@ -1,28 +1,26 @@
-// src/components/matrix/Step3ViewResult.tsx
 import React, { useMemo } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import { analyzeMatrix } from '../../utils/matrixCostCalculator';
 import { recipeMap } from '../../data/matrixData';
-
-// --- NOVOS IMPORTS DOS COMPONENTES FILHOS ---
 import ResultDisplay from './ResultDisplay';
 import RecipeOptionsDisplay from './RecipeOptionsDisplay';
+import { useSettings } from '../../contexts/SettingsContext';
 
 
 interface Step3Props {
-  language: 'pt' | 'en';
   prices: Map<string, number>;
   selectedMatrix: string;
   onBack: () => void;
   onReset: () => void;
 }
 
-const Step3ViewResult: React.FC<Step3Props> = ({ language, prices, selectedMatrix, onBack, onReset }) => {
+const Step3ViewResult: React.FC<Step3Props> = ({ prices, selectedMatrix, onBack, onReset }) => {
 
-  // --- LÓGICA (SEM ALTERAÇÃO) ---
+  const { language } = useSettings(); 
+
   const analysisResult = useMemo(() => {
     if (!selectedMatrix || prices.size === 0) {
-      return null; // Não roda a análise se não houver preços
+      return null; 
     }
     return analyzeMatrix(selectedMatrix, prices, language);
   }, [selectedMatrix, prices, language]);
@@ -33,7 +31,6 @@ const Step3ViewResult: React.FC<Step3Props> = ({ language, prices, selectedMatri
 
   const hasPrices = prices.size > 0;
 
-  // --- Traduções (sem alteração) ---
   const t = language === 'pt' ? {
     back: "Voltar",
     new_calc: "Novo Cálculo",
@@ -56,7 +53,6 @@ const Step3ViewResult: React.FC<Step3Props> = ({ language, prices, selectedMatri
 
   return (
     <Box>
-      {/* Botões de Navegação (sempre visíveis) */}
       <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between' }}>
         <Button onClick={onBack}>
           {t.back}
@@ -66,9 +62,7 @@ const Step3ViewResult: React.FC<Step3Props> = ({ language, prices, selectedMatri
         </Button>
       </Box>
       
-      {/* --- RENDERIZAÇÃO CONDICIONAL (AGORA MAIS LIMPA) --- */}
       {hasPrices ? (
-        // CENÁRIO 1: Usuário inseriu preços
         <>
           {!analysisResult ? (
             <Typography color="error">{t.error_desc}</Typography>
@@ -77,10 +71,8 @@ const Step3ViewResult: React.FC<Step3Props> = ({ language, prices, selectedMatri
               {t.insufficient_desc}
             </Typography>
           ) : (
-            // --- USA O COMPONENTE IMPORTADO ---
             <ResultDisplay 
               result={analysisResult} 
-              language={language}
               prices={prices}
             />
           )}
@@ -90,8 +82,9 @@ const Step3ViewResult: React.FC<Step3Props> = ({ language, prices, selectedMatri
         <Box>
           <Typography variant="h6" gutterBottom>{t.no_price_title}</Typography>
           <Typography color="text.secondary" sx={{ mb: 2 }}>{t.no_price_desc}</Typography>
-          {/* --- USA O COMPONENTE IMPORTADO --- */}
-          <RecipeOptionsDisplay recipes={recipes} language={language} />
+          <RecipeOptionsDisplay 
+            recipes={recipes} 
+          />
         </Box>
       )}
     </Box>

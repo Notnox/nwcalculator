@@ -1,12 +1,10 @@
-// src/pages/HomePage.tsx
 import { 
   Typography, Paper, Box, Container, 
-  Card, CardActionArea, Avatar // <-- Mudança nos imports
+  Card, CardActionArea, Avatar
 } from '@mui/material';
-import { useApp } from '../layout/MainLayout';
-import { useNavigate } from 'react-router-dom'; // <-- NOVO: Para navegar
+import { useNavigate } from 'react-router-dom';
+import { useSettings } from '../contexts/SettingsContext';
 
-// --- Objeto de Traduções ATUALIZADO e MINIMALISTA ---
 const translations = {
   pt: {
     welcome: "Bem-vindo ao New World Calc",
@@ -29,8 +27,8 @@ const translations = {
 };
 
 function HomePage() {
-  const { language } = useApp();
-  const navigate = useNavigate(); // <-- NOVO
+  const { language } = useSettings();
+  const navigate = useNavigate(); 
   const t = translations[language];
 
   return (
@@ -45,26 +43,21 @@ function HomePage() {
           {t.subtitle}
         </Typography>
 
-        {/* --- SEÇÕES "COMO USAR" E "FUNCIONALIDADES" REMOVIDAS --- */}
-
-        {/* --- NOVA SEÇÃO "COMECE A CALCULAR" COM BOTÕES --- */}
         <Box sx={{ alignSelf: 'stretch', width: '100%' }}>
           <Typography variant="h6" gutterBottom sx={{ textAlign: 'center', mb: 3 }}>
             {t.cta_title}
           </Typography>
           
-          {/* Layout em Grid (2 colunas em telas pequenas, 1 em extra-pequenas) */}
           <Box 
             sx={{ 
               display: 'grid',
               gap: 3,
               gridTemplateColumns: {
-                xs: 'repeat(1, 1fr)', // 1 coluna em mobile
-                sm: 'repeat(2, 1fr)', // 2 colunas em desktop
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
               }
             }}
           >
-            {/* Card 1: Calculadora de Refino */}
             <Card 
               elevation={3}
               sx={{ 
@@ -74,11 +67,10 @@ function HomePage() {
               }}
             >
               <CardActionArea 
-                onClick={() => navigate('/refinos')} // Navega para a página de seleção
+                onClick={() => navigate('/refinos')} 
                 sx={{ p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, height: '100%' }}
               >
                 <Avatar 
-                  // Ícone genérico para "Refino" (usando Fundição)
                   src="https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/ingott53.png" 
                   sx={{ width: 64, height: 64, backgroundColor: '#ff9800' }} 
                 />
@@ -91,7 +83,6 @@ function HomePage() {
               </CardActionArea>
             </Card>
 
-            {/* Card 2: Otimizador de Matriz */}
             <Card 
               elevation={3}
               sx={{ 
@@ -101,11 +92,10 @@ function HomePage() {
               }}
             >
               <CardActionArea 
-                onClick={() => navigate('/matrizes')} // Navega para a calculadora de matriz
+                onClick={() => navigate('/matrizes')} 
                 sx={{ p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, height: '100%' }}
               >
                 <Avatar 
-                  // Ícone de Matriz
                   src="https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/matrix-weapont52.png" 
                   sx={{ width: 64, height: 64, backgroundColor: '#ff9800' }} 
                 />
@@ -120,9 +110,6 @@ function HomePage() {
 
           </Box>
         </Box>
-        {/* --- FIM DA NOVA SEÇÃO --- */}
-
-        {/* --- TEXTO FINAL REMOVIDO --- */}
         
       </Paper>
     </Container>
