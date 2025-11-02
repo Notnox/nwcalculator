@@ -1,18 +1,17 @@
 // src/utils/craftCalculator.ts
 import { type Recipe } from '../types/craftingTypes';
 
-// --- NOVO: Interface para uma Etapa de Craft ---
+// (As interfaces CraftingStep e Requirements não mudam)
 export interface CraftingStep {
-  itemName: string;      // O que estamos criando (ex: "Bloco de Pedra")
-  craftsNeeded: number;  // O "Total de refino" (ex: 10)
-  ingredients: { item: string, quantity: number }[]; // Materiais para ESTA etapa
+  itemName: string;
+  craftsNeeded: number;
+  ingredients: { item: string, quantity: number }[];
 }
 
-// Interface de Requisitos atualizada
 export interface Requirements {
-  refined: Map<string, number>; // Lista de compras (agregada)
-  base: Map<string, number>;    // Lista de compras (agregada)
-  steps: CraftingStep[];      // A nova lista de "Modo de Preparo"
+  refined: Map<string, number>;
+  base: Map<string, number>;
+  steps: CraftingStep[];
 }
 
 /**
@@ -23,40 +22,40 @@ function processItem(
   neededQty: number,
   requirements: Requirements,
   bonusChance: number,
-  recipeMap: Map<string, Recipe>
+  recipeMap: Map<string, Recipe[]> // <-- TIPO ATUALIZADO
 ): void {
-  const recipe: Recipe | undefined = recipeMap.get(itemName);
+  
+  // --- CORREÇÃO AQUI ---
+  // Pega o array de receitas
+  const recipes = recipeMap.get(itemName);
+  // Pega a primeira (e única) receita de refino
+  const recipe: Recipe | undefined = recipes ? recipes[0] : undefined; 
+  // --- FIM DA CORREÇÃO ---
 
   if (recipe) {
     // --- É UM ITEM REFINADO ---
-    
-    // Calcula o "Total de refino" (craftsNeeded)
     const totalChance: number = recipe.chance_adicional + bonusChance;
     const avgYield: number = 1 + (totalChance / 100);
     const craftsNeeded: number = Math.ceil(neededQty / avgYield);
 
-    // Adiciona na lista de compras "Itens Refinados" (a antiga)
     const currentQty: number = requirements.refined.get(itemName) || 0;
     requirements.refined.set(itemName, currentQty + neededQty);
     
-    // Lista para os ingredientes *desta* etapa
     const stepIngredients: { item: string, quantity: number }[] = [];
 
     for (const ingredient of recipe.ingredientes) {
+      // (O nome da prop 'quantidade' já estava correto aqui)
       const ingredientQtyNeeded: number = craftsNeeded * ingredient.quantidade;
       
-      // Adiciona na lista de ingredientes da etapa
       stepIngredients.push({ 
         item: ingredient.item, 
         quantity: ingredientQtyNeeded 
       });
       
-      // Chamada recursiva para os sub-itens
+      // Passa o recipeMap (o Map<string, Recipe[]>) para a recursão
       processItem(ingredient.item, ingredientQtyNeeded, requirements, bonusChance, recipeMap);
     }
     
-    // --- NOVO: Adiciona a etapa de craft na lista ---
-    // Usamos .push() para garantir a ordem (T1 -> T2 -> T3)
     requirements.steps.push({
       itemName: itemName,
       craftsNeeded: craftsNeeded,
@@ -77,24 +76,28 @@ export function calculateRequirements(
   targetItemName: string,
   targetQuantity: number,
   bonusChance: number,
-  recipeMap: Map<string, Recipe>
+  recipeMap: Map<string, Recipe[]> // <-- TIPO ATUALIZADO
 ): Requirements {
   
-  // Inicializa o objeto de requisitos com o novo array 'steps'
   const requirements: Requirements = {
     refined: new Map<string, number>(),
     base: new Map<string, number>(),
-    steps: [], // <-- NOVO
+    steps: [],
   };
   
-  const targetRecipe: Recipe | undefined = recipeMap.get(targetItemName);
+  // --- CORREÇÃO AQUI ---
+  // Pega o array de receitas
+  const targetRecipes = recipeMap.get(targetItemName);
+  // Pega a primeira (e única) receita de refino
+  const targetRecipe: Recipe | undefined = targetRecipes ? targetRecipes[0] : undefined;
+  // --- FIM DA CORREÇÃO ---
+
   if (!targetRecipe) {
     console.error(`Receita para ${targetItemName} não encontrada!`);
     return requirements;
   }
 
   // --- LÓGICA DO ITEM FINAL ---
-  // Calcula o "Total de refino" para o item final (ex: Bloco Prismático)
   const totalChance: number = targetRecipe.chance_adicional + bonusChance;
   const avgYield: number = 1 + (totalChance / 100);
   const targetCraftsNeeded: number = Math.ceil(targetQuantity / avgYield);
@@ -113,11 +116,11 @@ export function calculateRequirements(
     processItem(ingredient.item, ingredientQtyNeeded, requirements, bonusChance, recipeMap);
   }
 
-  // --- NOVO: Adiciona a etapa final (ex: Etapa 5: Bloco Prismático) ---
+  // Adiciona a etapa final
   requirements.steps.push({
     itemName: targetItemName,
     craftsNeeded: targetCraftsNeeded,
-    ingredients: targetIngredients,
+    ingredients: targetIngredients, // Usa os ingredientes já calculados
   });
 
   return requirements;
