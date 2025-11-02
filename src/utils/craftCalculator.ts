@@ -14,6 +14,40 @@ export interface Requirements {
   steps: CraftingStep[];
 }
 
+// --- FUNÇÃO ANTIGA (REMOVIDA) ---
+// function getDynamicSafetyFactor(totalChance: number): number { ... }
+
+// --- NOVA FUNÇÃO DE CÁLCULO DE CHANCE ---
+/**
+ * Aplica uma lógica pessimista à chance de bônus.
+ * Para itens com chance base <= 10%, ignoramos bônus externos (muito volátil).
+ * Para outros, aplicamos um fator de segurança (ex: 90% de confiança).
+ */
+function getSafeChance(baseChance: number, bonusChance: number): number {
+  
+  // Limite de segurança: se a chance base é 10% ou menos
+  const LOW_CHANCE_THRESHOLD = 10;
+  
+  // Fator de segurança para chances "normais"
+  const STANDARD_SAFETY_FACTOR = 0.9; // 90% de confiança
+
+  let safeChance = 0;
+
+  if (baseChance <= LOW_CHANCE_THRESHOLD) {
+    // LÓGICA PESSIMISTA: Ignora o bônus de roupa/forte
+    // Usa apenas a chance base.
+    safeChance = baseChance;
+  } else {
+    // LÓGICA PADRÃO: Confia em 90% da chance total
+    const totalChance = baseChance + bonusChance;
+    safeChance = totalChance * STANDARD_SAFETY_FACTOR;
+  }
+  
+  return Math.max(0, safeChance); // Garante que nunca seja negativo
+}
+// --- FIM DA NOVA FUNÇÃO ---
+
+
 /**
  * Função recursiva para processar os requisitos de um item.
  */
@@ -22,21 +56,24 @@ function processItem(
   neededQty: number,
   requirements: Requirements,
   bonusChance: number,
-  recipeMap: Map<string, Recipe[]> // <-- TIPO ATUALIZADO
+  recipeMap: Map<string, Recipe[]>
 ): void {
   
-  // --- CORREÇÃO AQUI ---
-  // Pega o array de receitas
   const recipes = recipeMap.get(itemName);
-  // Pega a primeira (e única) receita de refino
   const recipe: Recipe | undefined = recipes ? recipes[0] : undefined; 
-  // --- FIM DA CORREÇÃO ---
 
   if (recipe) {
     // --- É UM ITEM REFINADO ---
-    const totalChance: number = recipe.chance_adicional + bonusChance;
-    const avgYield: number = 1 + (totalChance / 100);
-    const craftsNeeded: number = Math.ceil(neededQty / avgYield);
+    
+    // --- LÓGICA DE CÁLCULO ATUALIZADA ---
+    
+    // 1. Calcula a chance "segura"
+    const safeChance: number = getSafeChance(recipe.chance_adicional, bonusChance); 
+    
+    // 2. Calcula o rendimento pessimista
+    const safeAvgYield: number = 1 + (safeChance / 100);
+    const craftsNeeded: number = Math.ceil(neededQty / safeAvgYield);
+    // --- FIM DA ATUALIZAÇÃO ---
 
     const currentQty: number = requirements.refined.get(itemName) || 0;
     requirements.refined.set(itemName, currentQty + neededQty);
@@ -44,15 +81,8 @@ function processItem(
     const stepIngredients: { item: string, quantity: number }[] = [];
 
     for (const ingredient of recipe.ingredientes) {
-      // (O nome da prop 'quantidade' já estava correto aqui)
       const ingredientQtyNeeded: number = craftsNeeded * ingredient.quantidade;
-      
-      stepIngredients.push({ 
-        item: ingredient.item, 
-        quantity: ingredientQtyNeeded 
-      });
-      
-      // Passa o recipeMap (o Map<string, Recipe[]>) para a recursão
+      stepIngredients.push({ item: ingredient.item, quantity: ingredientQtyNeeded });
       processItem(ingredient.item, ingredientQtyNeeded, requirements, bonusChance, recipeMap);
     }
     
@@ -76,7 +106,7 @@ export function calculateRequirements(
   targetItemName: string,
   targetQuantity: number,
   bonusChance: number,
-  recipeMap: Map<string, Recipe[]> // <-- TIPO ATUALIZADO
+  recipeMap: Map<string, Recipe[]>
 ): Requirements {
   
   const requirements: Requirements = {
@@ -85,42 +115,36 @@ export function calculateRequirements(
     steps: [],
   };
   
-  // --- CORREÇÃO AQUI ---
-  // Pega o array de receitas
   const targetRecipes = recipeMap.get(targetItemName);
-  // Pega a primeira (e única) receita de refino
   const targetRecipe: Recipe | undefined = targetRecipes ? targetRecipes[0] : undefined;
-  // --- FIM DA CORREÇÃO ---
 
   if (!targetRecipe) {
     console.error(`Receita para ${targetItemName} não encontrada!`);
     return requirements;
   }
 
-  // --- LÓGICA DO ITEM FINAL ---
-  const totalChance: number = targetRecipe.chance_adicional + bonusChance;
-  const avgYield: number = 1 + (totalChance / 100);
-  const targetCraftsNeeded: number = Math.ceil(targetQuantity / avgYield);
+  // --- LÓGICA DO ITEM FINAL (ATUALIZADA) ---
+  
+  // 1. Calcula a chance "segura"
+  const safeChance: number = getSafeChance(targetRecipe.chance_adicional, bonusChance);
+
+  // 2. Aplica
+  const safeAvgYield: number = 1 + (safeChance / 100);
+  const targetCraftsNeeded: number = Math.ceil(targetQuantity / safeAvgYield);
+  // --- FIM DA ATUALIZAÇÃO ---
   
   const targetIngredients: { item: string, quantity: number }[] = [];
 
-  // Chama a recursão para os ingredientes do item final
   for (const ingredient of targetRecipe.ingredientes) {
     const ingredientQtyNeeded: number = targetCraftsNeeded * ingredient.quantidade;
-    
-    targetIngredients.push({
-      item: ingredient.item,
-      quantity: ingredientQtyNeeded
-    });
-    
+    targetIngredients.push({ item: ingredient.item, quantity: ingredientQtyNeeded });
     processItem(ingredient.item, ingredientQtyNeeded, requirements, bonusChance, recipeMap);
   }
 
-  // Adiciona a etapa final
   requirements.steps.push({
     itemName: targetItemName,
     craftsNeeded: targetCraftsNeeded,
-    ingredients: targetIngredients, // Usa os ingredientes já calculados
+    ingredients: targetIngredients,
   });
 
   return requirements;

@@ -24,15 +24,15 @@ interface HeaderProps {
 // --- Objeto de Traduções (com 'matrix' adicionado) ---
 const translations = {
   pt: {
-    refining: "Calc Refinos",
-    matrix: "Calc Matriz", // <-- NOVO
+    refining: "Refinos",
+    matrix: "Matriz", // <-- NOVO
     settings: "Configurações",
     theme: "Mudar Tema",
     language: "Idioma"
   },
   en: {
-    refining: "Refining Calcs",
-    matrix: "Calc Matrix", // <-- NOVO
+    refining: "Refining",
+    matrix: "Matrix", // <-- NOVO
     settings: "Settings",
     theme: "Toggle Theme",
     language: "Language"
