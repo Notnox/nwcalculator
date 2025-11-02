@@ -1,67 +1,36 @@
 // src/pages/HomePage.tsx
 import { 
-  Typography, Paper, Box, List, ListItem, 
-  ListItemIcon, ListItemText, Container 
+  Typography, Paper, Box, Container, 
+  Card, CardActionArea, Avatar // <-- Mudança nos imports
 } from '@mui/material';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { useApp } from '../layout/MainLayout'; // <-- Importar o hook de contexto
+import { useApp } from '../layout/MainLayout';
+import { useNavigate } from 'react-router-dom'; // <-- NOVO: Para navegar
 
-// --- Objeto de Traduções ATUALIZADO ---
+// --- Objeto de Traduções ATUALIZADO e MINIMALISTA ---
 const translations = {
   pt: {
     welcome: "Bem-vindo ao New World Calc",
-    subtitle: "Sua ferramenta completa para planejar e calcular os custos de refino no New World.",
-    // --- NOVA SEÇÃO: COMO USAR ---
-    how_title: "Como usar o site",
-    h_step1_title: "1. Selecione a Profissão",
-    h_step1_desc: "Clique em 'Calc Refinos' no menu para escolher a profissão (ex: Cantaria, Fundição).",
-    h_step2_title: "2. Escolha o Item Final",
-    h_step2_desc: "Na página da profissão, clique no ícone do item que você deseja fabricar (ex: Bloco Prismático).",
-    h_step3_title: "3. Ajuste seus Bônus",
-    h_step3_desc: "Marque ou desmarque as caixas de 'Roupa' e 'Forte' para corresponder aos seus bônus no jogo.",
-    h_step4_title: "4. Calcule!",
-    h_step4_desc: "Digite a quantidade desejada e clique em 'Calcular' para ver a lista de compras e o guia de refino.",
-    // --- SEÇÃO ANTIGA (RENOMEADA) ---
-    features_title: "Funcionalidades Principais", // Renomeado de "what"
-    features_desc: "Esta calculadora de craft foi projetada para fornecer uma lista de materiais exata, considerando todos os seus bônus de refino.", // Renomeado de "what_desc"
-    f1_title: "Cálculo de Bônus Preciso",
-    f1_desc: "Inclui bônus de roupas e bônus de território (Forte) para um resultado exato.",
-    f2_title: "Lista de Compras Otimizada",
-    f2_desc: "Gera uma lista agregada de toda a matéria-prima e itens refinados necessários.",
-    f3_title: "Guia Modo de Preparo",
-    f3_desc: "Fornece um guia passo a passo ('Etapas de Craft') mostrando o que refinar primeiro.",
-    start: "Para começar, selecione uma profissão no menu acima."
+    subtitle: "Sua ferramenta para planejar e calcular custos no New World.",
+    cta_title: "Comece a Calcular",
+    refining_title: "Calculadora de Refino",
+    refining_desc: "Calcule a lista de materiais exata para todos os refinos (Pedra Rúnica, Asmódeo, etc.), incluindo seus bônus de roupa e território.",
+    matrix_title: "Otimizador de Matriz",
+    matrix_desc: "Compare o custo de fabricar vs. comprar Matrizes (Arma, Armadura, Joia) e descubra a opção mais lucrativa com base nos preços do mercado."
   },
   en: {
     welcome: "Welcome to New World Calc",
-    subtitle: "Your complete tool for planning and calculating refining costs in New World.",
-    // --- NEW SECTION: HOW TO USE ---
-    how_title: "How to Use the Site",
-    h_step1_title: "1. Select a Profession",
-    h_step1_desc: "Click 'Refining Calcs' in the menu to choose a profession (e.g., Stonecutting, Smelting).",
-    h_step2_title: "2. Choose the Final Item",
-    h_step2_desc: "On the profession's page, click the icon of the item you want to craft (e.g., Prismatic Block).",
-    h_step3_title: "3. Adjust Your Bonuses",
-    h_step3_desc: "Check or uncheck the 'Gear' and 'Fort' boxes to match your in-game bonuses.",
-    h_step4_title: "4. Calculate!",
-    h_step4_desc: "Enter the desired quantity and click 'Calculate' to see the shopping list and refining guide.",
-    // --- OLD SECTION (RENAMED) ---
-    features_title: "Main Features", // Renamed from "what"
-    features_desc: "This craft calculator is designed to provide an exact materials list, accounting for all your refining bonuses.", // Renamed from "what_desc"
-    f1_title: "Accurate Bonus Calculation",
-    f1_desc: "Includes gear bonuses and territory (Fort) bonuses for a precise result.",
-    f2_title: "Optimized Shopping List",
-    f2_desc: "Generates an aggregated list of all raw materials and refined items needed.",
-    f3_title: "Step-by-Step Guide",
-    f3_desc: "Provides a 'Crafting Steps' guide showing what to refine first.",
-    start: "To get started, select a profession from the menu above."
+    subtitle: "Your tool for planning and calculating costs in New World.",
+    cta_title: "Start Calculating",
+    refining_title: "Refining Calculator",
+    refining_desc: "Calculate the exact material list for all your refines (Runestone, Asmodeum, etc.), including your gear and territory bonuses.",
+    matrix_title: "Matrix Optimizer",
+    matrix_desc: "Compare the cost to craft vs. buy Matrices (Weapon, Armor, Jewelry) and find the most profitable option based on market prices."
   }
 };
 
 function HomePage() {
-  // Pega o idioma do contexto
   const { language } = useApp();
-  // Seleciona o objeto de texto correto
+  const navigate = useNavigate(); // <-- NOVO
   const t = translations[language];
 
   return (
@@ -76,69 +45,84 @@ function HomePage() {
           {t.subtitle}
         </Typography>
 
-        {/* --- NOVA SEÇÃO "COMO USAR" --- */}
-        <Box sx={{ alignSelf: 'flex-start', width: '100%', mb: 4 }}>
-          <Typography variant="h6" gutterBottom>
-            {t.how_title}
+        {/* --- SEÇÕES "COMO USAR" E "FUNCIONALIDADES" REMOVIDAS --- */}
+
+        {/* --- NOVA SEÇÃO "COMECE A CALCULAR" COM BOTÕES --- */}
+        <Box sx={{ alignSelf: 'stretch', width: '100%' }}>
+          <Typography variant="h6" gutterBottom sx={{ textAlign: 'center', mb: 3 }}>
+            {t.cta_title}
           </Typography>
-          <List>
-            <ListItem>
-              <ListItemIcon sx={{ minWidth: 32 }}>
-                <Typography variant="h6" color="primary">1.</Typography>
-              </ListItemIcon>
-              <ListItemText primary={t.h_step1_title} secondary={t.h_step1_desc} />
-            </ListItem>
-            <ListItem>
-              <ListItemIcon sx={{ minWidth: 32 }}>
-                <Typography variant="h6" color="primary">2.</Typography>
-              </ListItemIcon>
-              <ListItemText primary={t.h_step2_title} secondary={t.h_step2_desc} />
-            </ListItem>
-            <ListItem>
-              <ListItemIcon sx={{ minWidth: 32 }}>
-                <Typography variant="h6" color="primary">3.</Typography>
-              </ListItemIcon>
-              <ListItemText primary={t.h_step3_title} secondary={t.h_step3_desc} />
-            </ListItem>
-            <ListItem>
-              <ListItemIcon sx={{ minWidth: 32 }}>
-                <Typography variant="h6" color="primary">4.</Typography>
-              </ListItemIcon>
-              <ListItemText primary={t.h_step4_title} secondary={t.h_step4_desc} />
-            </ListItem>
-          </List>
+          
+          {/* Layout em Grid (2 colunas em telas pequenas, 1 em extra-pequenas) */}
+          <Box 
+            sx={{ 
+              display: 'grid',
+              gap: 3,
+              gridTemplateColumns: {
+                xs: 'repeat(1, 1fr)', // 1 coluna em mobile
+                sm: 'repeat(2, 1fr)', // 2 colunas em desktop
+              }
+            }}
+          >
+            {/* Card 1: Calculadora de Refino */}
+            <Card 
+              elevation={3}
+              sx={{ 
+                transition: 'transform 0.15s ease-out, border-color 0.15s ease-out',
+                '&:hover': { transform: 'scale(1.02)', borderColor: 'primary.main' },
+                border: '2px solid transparent',
+              }}
+            >
+              <CardActionArea 
+                onClick={() => navigate('/refinos')} // Navega para a página de seleção
+                sx={{ p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, height: '100%' }}
+              >
+                <Avatar 
+                  // Ícone genérico para "Refino" (usando Fundição)
+                  src="https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/ingott53.png" 
+                  sx={{ width: 64, height: 64, backgroundColor: '#ff9800' }} 
+                />
+                <Typography variant="h6" sx={{ textAlign: 'center' }}>
+                  {t.refining_title}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
+                  {t.refining_desc}
+                </Typography>
+              </CardActionArea>
+            </Card>
+
+            {/* Card 2: Otimizador de Matriz */}
+            <Card 
+              elevation={3}
+              sx={{ 
+                transition: 'transform 0.15s ease-out, border-color 0.15s ease-out',
+                '&:hover': { transform: 'scale(1.02)', borderColor: 'primary.main' },
+                border: '2px solid transparent',
+              }}
+            >
+              <CardActionArea 
+                onClick={() => navigate('/matrizes')} // Navega para a calculadora de matriz
+                sx={{ p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, height: '100%' }}
+              >
+                <Avatar 
+                  // Ícone de Matriz
+                  src="https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/matrix-weapont52.png" 
+                  sx={{ width: 64, height: 64, backgroundColor: '#ff9800' }} 
+                />
+                <Typography variant="h6" sx={{ textAlign: 'center' }}>
+                  {t.matrix_title}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
+                  {t.matrix_desc}
+                </Typography>
+              </CardActionArea>
+            </Card>
+
+          </Box>
         </Box>
         {/* --- FIM DA NOVA SEÇÃO --- */}
 
-
-        {/* --- SEÇÃO "FUNCIONALIDADES" (ANTIGA "O QUE FAZ") --- */}
-        <Box sx={{ alignSelf: 'flex-start', width: '100%' }}>
-          <Typography variant="h6" gutterBottom>
-            {t.features_title} {/* Título atualizado */}
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 2 }}>
-            {t.features_desc} {/* Descrição atualizada */}
-          </Typography>
-
-          <List>
-            <ListItem>
-              <ListItemIcon><CheckCircleOutlineIcon color="primary" /></ListItemIcon>
-              <ListItemText primary={t.f1_title} secondary={t.f1_desc} />
-            </ListItem>
-            <ListItem>
-              <ListItemIcon><CheckCircleOutlineIcon color="primary" /></ListItemIcon>
-              <ListItemText primary={t.f2_title} secondary={t.f2_desc} />
-            </ListItem>
-            <ListItem>
-              <ListItemIcon><CheckCircleOutlineIcon color="primary" /></ListItemIcon>
-              <ListItemText primary={t.f3_title} secondary={t.f3_desc} />
-            </ListItem>
-          </List>
-        </Box>
-
-        <Typography variant="h6" sx={{ textAlign: 'center', mt: 4, pt: 2, borderTop: 1, borderColor: 'divider', width: '100%' }}>
-          {t.start}
-        </Typography>
+        {/* --- TEXTO FINAL REMOVIDO --- */}
         
       </Paper>
     </Container>

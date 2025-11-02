@@ -8,7 +8,7 @@ import {
 // --- Dados ---
 // Agora, garantimos que 'cantariaData' SEGUE a estrutura que definimos
 const weavingData: CraftingData = {
-  name: {pt_name: "Tecelagem", en_name: "Weaving", imagem: "https://br.nwdb.info/images/db/icons/filters/tradeskills/weaving.png"},
+  name: {pt_name: "Tecelagem", en_name: "Weaving", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/clotht53.png"},
   material_base: [
     {item: "Fibra", en_name: "Fibers", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/fibert1.png", backgroundColor: "cinza"},
     {item: "Fios de Seda", en_name: "Silk Threads", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/fibert4.png", backgroundColor: "cinza"},

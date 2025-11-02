@@ -6,7 +6,7 @@ import {
 } from '../types/craftingTypes';
 
 const smeltingData: CraftingData = {
-  name: {pt_name: "Fundição", en_name: "Smelting", imagem: "https://br.nwdb.info/images/db/icons/filters/tradeskills/smelting.png"},
+  name: {pt_name: "Fundição", en_name: "Smelting", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/ingott53.png"},
   material_base: [
     {item: "Minério de Ferro", en_name: "Iron Ore", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/oret1.png", backgroundColor: "cinza"},
     {item: "Minério de Estelaço", en_name: "Starmetal Ore", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/oret4.png", backgroundColor: "cinza"},

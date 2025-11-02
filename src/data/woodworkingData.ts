@@ -6,7 +6,7 @@ import {
 } from '../types/craftingTypes';
 
 const woodworkingData: CraftingData = {
-  name: {pt_name: "Carpintaria", en_name: "Woodworking", imagem: "https://br.nwdb.info/images/db/icons/filters/tradeskills/woodworking.png"},
+  name: {pt_name: "Carpintaria", en_name: "Woodworking", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/timbert53.png"},
   material_base: [
     {item: "Madeira Verde", en_name: "Green Wood", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/woodt1.png", backgroundColor: "cinza"},
     {item: "Madeira Envelhecida", en_name: "Aged Wood", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/woodt2.png", backgroundColor: "cinza"},

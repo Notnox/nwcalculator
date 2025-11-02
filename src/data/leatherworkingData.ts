@@ -6,7 +6,7 @@ import {
 } from '../types/craftingTypes';
 
 const leatherworkingData: CraftingData = {
-  name: {pt_name: "Curtume", en_name: "Leatherworking", imagem: "https://br.nwdb.info/images/db/icons/filters/tradeskills/leatherworking.png"},
+  name: {pt_name: "Curtume", en_name: "Leatherworking", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/leathert53.png"},
   material_base: [
     {item: "Couro Cru", en_name: "Rawhide", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/rawhidet1.png", backgroundColor: "cinza"},
     {item: "Pele Grossa", en_name: "Thick Hide", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/rawhidet4.png", backgroundColor: "cinza"},

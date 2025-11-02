@@ -10,7 +10,7 @@ import {
 // --- Dados ---
 // Agora, garantimos que 'cantariaData' SEGUE a estrutura que definimos
 const stonecuttingData: CraftingData = {
-  name: {pt_name: "Cantaria", en_name: "Stonecutting", imagem: "https://br.nwdb.info/images/db/icons/filters/tradeskills/stonecutting.png"},
+  name: {pt_name: "Cantaria", en_name: "Stonecutting", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/blockt53.png"},
   material_base: [
     {item: "Pedra", en_name: "Stone", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/stonet1.png", backgroundColor: "cinza"},
     {item: "Magnetita", en_name: "Lodestone", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/stonet4.png", backgroundColor: "cinza"},

@@ -73,7 +73,7 @@ const RefiningHomePage: React.FC = () => {
                   sx={{ 
                     width: 64, 
                     height: 64, 
-                    backgroundColor: '#000' // Fundo preto para ícones de profissão
+                    backgroundColor: '#ff9800' // Fundo preto para ícones de profissão
                   }}
                 />
                 <Typography variant="h6" sx={{ textAlign: 'center' }}>{name}</Typography>
