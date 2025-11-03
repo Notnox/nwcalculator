@@ -15,7 +15,7 @@ const material_base: ItemInfo[] = [
   {item: "Orbe de Gipsita", en_name: "Gypsum Orb", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/gypsumorb.png", backgroundColor: "roxo", price: 0},
   {item: "Lingote Prismático", en_name: "Prismatic Ingot", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/ingott53.png", backgroundColor: "laranja", price: 0},
   {item: "Couro Prismático", en_name: "Prismatic Leather", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/leathert53.png", backgroundColor: "laranja", price: 0},
-  {item: "Tábua Prismática", en_name: "Prismatic Wood", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/timbert53.png", backgroundColor: "laranja", price: 0},
+  {item: "Tábua Prismática", en_name: "Prismatic Planks", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/timbert53.png", backgroundColor: "laranja", price: 0},
   {item: "Tecido Prismático", en_name: "Prismatic Cloth", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/clotht53.png", backgroundColor: "laranja", price: 0},
   {item: "Bloco Prismático", en_name: "Prismatic Block", imagem: "https://cdn.nwdb.info/db/images/live/v57/icons/items/resource/blockt53.png", backgroundColor: "laranja", price: 0}
 ];
@@ -70,3 +70,12 @@ receitas.forEach(recipe => {
 export const itemInfoMap = new Map<string, ItemInfo>(
   [...material_base, ...refinamentos].map(item => [item.item, item])
 );
+
+export const enToPtItemMap = new Map<string, string>(
+  priceableItems.map(item => [item.en_name, item.item])
+);
+
+export const defaultPrices = new Map<string, number>([
+  ['Orbe de Gipsita', 100], 
+  ['Azoth', 0] // Itens "grátis"
+]);
