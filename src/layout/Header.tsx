@@ -37,7 +37,6 @@ function Header() {
   const [anchorElSettings, setAnchorElSettings] = useState<null | HTMLElement>(null);
   const [anchorElLang, setAnchorElLang] = useState<null | HTMLElement>(null);
 
-  const handleRefiningClick = (event: React.MouseEvent<HTMLElement>) => { setAnchorElRefining(event.currentTarget); };
   const handleRefiningClose = () => { setAnchorElRefining(null); };
   const handleRefiningSelect = (path: string) => {
     navigate(path);
@@ -76,7 +75,8 @@ function Header() {
         <Box>
           <Button
             color="inherit"
-            onClick={handleRefiningClick}
+            component={RouterLink}
+            to="/refinos"
           >
             {t.refining}
           </Button>

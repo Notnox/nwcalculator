@@ -1,4 +1,3 @@
-// src/components/matrix/Step2InputPrices.tsx
 import React, { useState, useEffect } from 'react';
 import { 
   Box, Button, Table, TableBody, TableCell, TableContainer, TableRow, 
@@ -13,7 +12,7 @@ import { usePrices } from '../../contexts/PriceContext';
 import { serverList } from '../../data/priceData';
 
 interface Step2Props {
-  prices: Map<string, number>; // O estado "Pai" (Números)
+  prices: Map<string, number>;
   onSetPrices: (newPrices: Map<string, number>) => void;
   onBack: () => void;
   onNext: () => void;
@@ -27,7 +26,6 @@ interface Step2Props {
  * (ex: 16.9 -> "16,9")
  */
 const numberMapToStringMap = (numMap: Map<string, number>): Map<string, string> => {
-  // console.log('[DEBUG] numberMapToStringMap: Convertendo NÚMEROS para STRINGS com vírgula', numMap);
   const stringMap = new Map<string, string>();
   numMap.forEach((value, key) => {
     if (value > 0) {
@@ -50,51 +48,43 @@ const Step2InputPrices: React.FC<Step2Props> = ({
     isLoading, 
     error: fetchError, 
     updatePrices,
-    loadPricesFromServer, // <-- NOVO: Função para carregar
-    getApiTimestamp       // <-- NOVO: Função para ler timestamp
+    loadPricesFromServer, 
+    getApiTimestamp 
   } = usePrices();
 
   // --- Estados Locais ---
   const [localValues, setLocalValues] = useState(() => numberMapToStringMap(prices));
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedServer, setSelectedServer] = useState<string | null>(null); 
-  // O timestamp agora é lido dinamicamente
   const [currentApiTimestamp, setCurrentApiTimestamp] = useState<string | null>(null);
 
   // Efeito 1: Sincroniza se a LISTA DE ITENS mudar (ex: trocar de Matriz)
   useEffect(() => {
-    // console.log('[DEBUG] useEffect [priceableItems]: A lista de itens mudou. Resetando localValues com base no "prices" (pai).');
     setLocalValues(numberMapToStringMap(prices));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [priceableItems]); 
 
   // Efeito 2: Sincroniza se o estado PAI (prices) mudar
   // (Necessário para a importação)
   useEffect(() => {
-    // console.log('[DEBUG] useEffect [prices]: O estado PAI (prices) mudou. Sincronizando localValues.');
     setLocalValues(numberMapToStringMap(prices));
   }, [prices]);
 
-  // --- NOVO: Efeito 3 ---
   // Atualiza o timestamp (e os dados) se o servidor selecionado mudar
   useEffect(() => {
     if (selectedServer) {
       // Carrega os dados do storage para este servidor
       const pricesFromServer = loadPricesFromServer(selectedServer);
-      onSetPrices(pricesFromServer); // Atualiza o "pai"
-      setLocalValues(numberMapToStringMap(pricesFromServer)); // Atualiza o "local"
+      onSetPrices(pricesFromServer); 
+      setLocalValues(numberMapToStringMap(pricesFromServer));
       
       // Busca o timestamp desse servidor
       setCurrentApiTimestamp(getApiTimestamp(selectedServer));
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedServer]); // Roda quando o usuário troca o servidor no Autocomplete
 
 
   // Handler para quando o usuário digita no TextField
   const handlePriceChange = (itemName: string, value: string) => {
-    // console.log(`[DEBUG] handlePriceChange: Usuário digitou no item '${itemName}', valor: '${value}'`);
-    
     // 1. Normaliza: Aceita ponto ou vírgula, mas força vírgula
     let cleanValue = value.replace('.', ',');
 
@@ -115,8 +105,7 @@ const Step2InputPrices: React.FC<Step2Props> = ({
     // 5. Atualiza o estado local (o que o usuário vê na tela, ex: "16,")
     const newLocalValues = new Map(localValues);
     newLocalValues.set(itemName, cleanValue);
-    setLocalValues(newLocalValues); // <-- Atualiza a UI
-    // console.log(`[DEBUG] handlePriceChange: Estado local (visual) atualizado para:`, newLocalValues);
+    setLocalValues(newLocalValues);
 
     // 6. Atualiza o estado pai (o número para o cálculo, ex: 16)
     const formattedForCalc = cleanValue.replace(',', '.');
@@ -128,8 +117,7 @@ const Step2InputPrices: React.FC<Step2Props> = ({
     } else {
       newPrices.delete(itemName);
     }
-    onSetPrices(newPrices); // <-- Atualiza o estado lógico (pai)
-    // console.log(`[DEBUG] handlePriceChange: Estado pai (lógico) atualizado para:`, newPrices);
+    onSetPrices(newPrices);
   };
   
   // --- Handlers do Popup e Importação ---
@@ -137,7 +125,6 @@ const Step2InputPrices: React.FC<Step2Props> = ({
   const handleCloseDialog = () => setDialogOpen(false);
   
   const handleConfirmImport = async () => {
-    // console.log(`[DEBUG] handleConfirmImport: Iniciando importação para o servidor: ${selectedServer}`);
     handleCloseDialog();
     if (selectedServer) {
       // 1. Chama a função de atualização do CONTEXTO
@@ -196,11 +183,8 @@ const Step2InputPrices: React.FC<Step2Props> = ({
     ? (language === 'pt' ? selectedMatrixInfo.item : (selectedMatrixInfo.en_name || selectedMatrixInfo.item))
     : "";
 
-  // console.log('[DEBUG] Renderizando Step2InputPrices. Estado local atual (localValues):', localValues);
-
   return (
     <Box>
-      {/* Título (Matriz Selecionada) */}
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2, p: 1.5, bgcolor: 'action.hover', borderRadius: 1 }}>
         <Avatar 
           src={selectedMatrixInfo?.imagem}
@@ -211,7 +195,6 @@ const Step2InputPrices: React.FC<Step2Props> = ({
         </Typography>
       </Box>
 
-      {/* Bloco de Importação */}
       <Paper elevation={0} variant="outlined" sx={{ p: 2, mb: 2 }}>
         <Typography variant="subtitle2" gutterBottom>
           {t.import_title}
@@ -221,7 +204,6 @@ const Step2InputPrices: React.FC<Step2Props> = ({
           <Autocomplete
             value={selectedServer}
             onChange={(_event: React.SyntheticEvent, newValue: string | null) => {
-              // console.log(`[DEBUG] Autocomplete: Servidor selecionado: ${newValue}`);
               setSelectedServer(newValue);
             }}
             options={serverList.filter(s => s !== "Legacy Servers")} 
@@ -249,7 +231,6 @@ const Step2InputPrices: React.FC<Step2Props> = ({
         </Box>
         
         <Box sx={{ mt: 1.5 }}>
-          {/* ATUALIZADO: Agora usa o estado local 'currentApiTimestamp' */}
           {currentApiTimestamp && (
             <Typography variant="caption" display="block" sx={{ color: 'text.secondary' }}>
               {t.last_update} {currentApiTimestamp}
@@ -266,7 +247,6 @@ const Step2InputPrices: React.FC<Step2Props> = ({
         </Box>
       </Paper>
 
-      {/* Tabela de Preços */}
       <TableContainer component={Paper} elevation={0} variant="outlined" sx={{ mb: 2, maxHeight: 400, overflow: 'auto' }}>
         <Table size="small" stickyHeader>
           <TableBody>
@@ -319,7 +299,6 @@ const Step2InputPrices: React.FC<Step2Props> = ({
         </Table>
       </TableContainer>
 
-      {/* Botões de Navegação */}
       <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Button onClick={onBack}>
             {t.back}
@@ -334,7 +313,6 @@ const Step2InputPrices: React.FC<Step2Props> = ({
             </Box>
         </Box>
 
-      {/* Dialog de Confirmação */}
       <Dialog
         open={dialogOpen}
         onClose={handleCloseDialog}

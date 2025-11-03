@@ -1,9 +1,6 @@
-// src/contexts/PriceContext.tsx
 import React, { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
 import { enToPtItemMap, defaultPrices } from '../data/matrixData';
 import { priceItemSet } from '../data/priceData';
-
-// --- Tipos ---
 
 interface ApiListing {
   timestamp: string;
@@ -12,34 +9,25 @@ interface ApiListing {
 }
 type FetchTimestamps = Record<string, string>;
 
-// --- O que o storage aninhado armazena ---
 type PriceMap = Map<string, number>;
 type ServerPriceData = {
-  prices: Record<string, number>; // Objeto { "item": 100 }
-  timestamp: string; // Timestamp formatado (ex: "03/11/2025...")
+  prices: Record<string, number>; 
+  timestamp: string; 
 };
-type PriceStorage = Record<string, ServerPriceData>; // { "devaloka": { prices: {...}, timestamp: "..." } }
+type PriceStorage = Record<string, ServerPriceData>; 
 
-// --- O que o Contexto fornece ---
 interface PriceContextType {
-  // Estes são para a UI (feedback)
   isLoading: boolean;
   error: string | null;
-  // Esta é a função de "Importar"
   updatePrices: (serverName: string) => Promise<PriceMap | null>;
-  // Esta é a função para carregar dados na mudança de servidor
   loadPricesFromServer: (serverName: string) => PriceMap;
   getApiTimestamp: (serverName: string) => string | null;
 }
 
 const PriceContext = createContext<PriceContextType | undefined>(undefined);
+const PRICE_STORAGE_KEY = 'nw_matrix_prices_v2'; 
+const FETCH_THROTTLE_KEY = 'nw_fetch_timestamps';
 
-// --- Chaves do Storage ---
-// A CHAVE PAI que armazena { devaloka: {...}, aquarius: {...} }
-const PRICE_STORAGE_KEY = 'nw_matrix_prices_v2'; // v2 para aninhado
-const FETCH_THROTTLE_KEY = 'nw_fetch_timestamps'; // (Este continua global)
-
-// --- Funções Helper (sem alteração) ---
 function formatApiTimestamp(isoString: string): string {
   try {
     const date = new Date(isoString);
@@ -70,18 +58,11 @@ function saveFetchTimestamp(serverName: string) {
   timestamps[serverName.toLowerCase()] = new Date().toISOString();
   localStorage.setItem(FETCH_THROTTLE_KEY, JSON.stringify(timestamps));
 }
-// --- FIM DOS HELPERS ---
 
-
-// --- O Provedor (Provider) ---
 export const PriceProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // O Contexto agora só gerencia o estado de UI (loading/error)
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  /**
-   * LÊ o objeto de storage aninhado
-   */
   const getFullPriceStorage = (): PriceStorage => {
     const stored = localStorage.getItem(PRICE_STORAGE_KEY);
     return stored ? JSON.parse(stored) : {};
