@@ -47,36 +47,48 @@ const Step2InputPrices: React.FC<Step2Props> = ({
   // --- Hooks de Contexto ---
   const { language } = useSettings(); 
   const { 
-    // Não lemos mais o 'contextPrices' daqui para evitar o ciclo vicioso
-    apiTimestamp,
     isLoading, 
     error: fetchError, 
-    updatePrices 
+    updatePrices,
+    loadPricesFromServer, // <-- NOVO: Função para carregar
+    getApiTimestamp       // <-- NOVO: Função para ler timestamp
   } = usePrices();
 
   // --- Estados Locais ---
   const [localValues, setLocalValues] = useState(() => numberMapToStringMap(prices));
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedServer, setSelectedServer] = useState<string | null>(null); 
+  // O timestamp agora é lido dinamicamente
+  const [currentApiTimestamp, setCurrentApiTimestamp] = useState<string | null>(null);
 
   // Efeito 1: Sincroniza se a LISTA DE ITENS mudar (ex: trocar de Matriz)
-  // Este useEffect está correto e deve ficar.
   useEffect(() => {
     // console.log('[DEBUG] useEffect [priceableItems]: A lista de itens mudou. Resetando localValues com base no "prices" (pai).');
     setLocalValues(numberMapToStringMap(prices));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [priceableItems]); 
 
-  // --- EFEITO 2 (REMOVIDO) ---
-  // O useEffect que observava 'prices' foi REMOVIDO.
-  // Ele era a causa do bug da "vírgula" e da "importação".
-  /*
+  // Efeito 2: Sincroniza se o estado PAI (prices) mudar
+  // (Necessário para a importação)
   useEffect(() => {
-      // console.log('[DEBUG] useEffect [prices]: O estado PAI (prices) mudou. Sincronizando localValues.');
-      setLocalValues(numberMapToStringMap(prices));
+    // console.log('[DEBUG] useEffect [prices]: O estado PAI (prices) mudou. Sincronizando localValues.');
+    setLocalValues(numberMapToStringMap(prices));
   }, [prices]);
-  */
-  // --- FIM DA CORREÇÃO ---
+
+  // --- NOVO: Efeito 3 ---
+  // Atualiza o timestamp (e os dados) se o servidor selecionado mudar
+  useEffect(() => {
+    if (selectedServer) {
+      // Carrega os dados do storage para este servidor
+      const pricesFromServer = loadPricesFromServer(selectedServer);
+      onSetPrices(pricesFromServer); // Atualiza o "pai"
+      setLocalValues(numberMapToStringMap(pricesFromServer)); // Atualiza o "local"
+      
+      // Busca o timestamp desse servidor
+      setCurrentApiTimestamp(getApiTimestamp(selectedServer));
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedServer]); // Roda quando o usuário troca o servidor no Autocomplete
 
 
   // Handler para quando o usuário digita no TextField
@@ -128,27 +140,19 @@ const Step2InputPrices: React.FC<Step2Props> = ({
     // console.log(`[DEBUG] handleConfirmImport: Iniciando importação para o servidor: ${selectedServer}`);
     handleCloseDialog();
     if (selectedServer) {
-      // 1. Chama a função do Contexto (faz o fetch OU carrega do storage)
-      await updatePrices(selectedServer);
+      // 1. Chama a função de atualização do CONTEXTO
+      // (Isso faz o fetch OU carrega do storage, e salva no localStorage aninhado)
+      const fetchedPricesMap = await updatePrices(selectedServer);
       
-      // 2. Lê os preços ATUALIZADOS do localStorage
-      // (O PriceContext já salvou os NÚMEROS lá)
-      const storedPrices = localStorage.getItem('nw_matrix_prices');
-      // console.log('[DEBUG] handleConfirmImport: Dados lidos do localStorage após o fetch/load:', storedPrices);
-
-      if (storedPrices) {
-        const fetchedPricesMap = new Map<string, number>(Object.entries(JSON.parse(storedPrices)));
-        // console.log('[DEBUG] handleConfirmImport: Map de NÚMEROS lido do storage:', fetchedPricesMap);
-        
-        // 3. ATUALIZA O ESTADO PAI (Números)
+      if (fetchedPricesMap) {
+        // 2. ATUALIZA O ESTADO PAI (Números)
         onSetPrices(fetchedPricesMap);
         
-        // 4. ATUALIZA O ESTADO LOCAL (Strings com vírgula)
-        const stringMap = numberMapToStringMap(fetchedPricesMap);
-        // console.log('[DEBUG] handleConfirmImport: Map de STRINGS (com vírgula) sendo setado no estado local:', stringMap);
-        setLocalValues(stringMap);
-      } else {
-        // console.warn('[DEBUG] handleConfirmImport: updatePrices() terminou, mas não encontrou nada no localStorage.');
+        // 3. ATUALIZA O ESTADO LOCAL (Strings com vírgula)
+        setLocalValues(numberMapToStringMap(fetchedPricesMap));
+        
+        // 4. ATUALIZA O TIMESTAMP (após o fetch/load)
+        setCurrentApiTimestamp(getApiTimestamp(selectedServer));
       }
     }
   };
@@ -165,7 +169,7 @@ const Step2InputPrices: React.FC<Step2Props> = ({
     import_warning: "Não confie 100% nos valores, é apenas uma estimativa e os valores podem variar.",
     last_update: "Última atualização da base:",
     confirm_title: "Confirmar Importação",
-    confirm_desc: "Isso buscará os preços mais recentes e irá sobrescrever quaisquer valores que você digitou manualmente. Deseja continuar?",
+    confirm_desc: "Isso buscará os preços mais recentes e irá sobrescrever quaisquer valores que você digitou manually. Deseja continuar?",
     cancel: "Cancelar",
     confirm: "Confirmar",
     server_label: "Selecione o Servidor"
@@ -245,9 +249,10 @@ const Step2InputPrices: React.FC<Step2Props> = ({
         </Box>
         
         <Box sx={{ mt: 1.5 }}>
-          {apiTimestamp && (
+          {/* ATUALIZADO: Agora usa o estado local 'currentApiTimestamp' */}
+          {currentApiTimestamp && (
             <Typography variant="caption" display="block" sx={{ color: 'text.secondary' }}>
-              {t.last_update} {apiTimestamp}
+              {t.last_update} {currentApiTimestamp}
             </Typography>
           )}
           <Typography variant="caption" display="block" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
@@ -290,13 +295,14 @@ const Step2InputPrices: React.FC<Step2Props> = ({
                         size="small"
                         variant="outlined"
                         value={currentDisplayValue}
-                        onChange={(e) => handlePriceChange(item.item, e.target.value)}                        
+                        onChange={(e) => handlePriceChange(item.item, e.target.value)}
+                        
                         onWheel={(e) => (e.target as HTMLElement).blur()}
-
+                        
                         sx={{ 
                           width: 150,
                         }}
-
+                        
                         InputProps={{ 
                           inputProps: { 
                             inputMode: 'decimal', 

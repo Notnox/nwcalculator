@@ -1,37 +1,56 @@
 // src/contexts/PriceContext.tsx
 import React, { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
-// --- MUDANÇA: Importa o mapa de tradução ---
 import { enToPtItemMap, defaultPrices } from '../data/matrixData';
-// O priceItemSet (em inglês) ainda é necessário para filtrar a API
 import { priceItemSet } from '../data/priceData';
 
 // --- Tipos ---
 
 interface ApiListing {
   timestamp: string;
-  item_name: string; // <-- Chave em INGLÊS da API
+  item_name: string;
   price: number;
 }
 type FetchTimestamps = Record<string, string>;
+
+// --- O que o storage aninhado armazena ---
+type PriceMap = Map<string, number>;
+type ServerPriceData = {
+  prices: Record<string, number>; // Objeto { "item": 100 }
+  timestamp: string; // Timestamp formatado (ex: "03/11/2025...")
+};
+type PriceStorage = Record<string, ServerPriceData>; // { "devaloka": { prices: {...}, timestamp: "..." } }
+
+// --- O que o Contexto fornece ---
 interface PriceContextType {
-  prices: Map<string, number>; // <-- Agora usará chaves em PORTUGUÊS
-  apiTimestamp: string | null;
+  // Estes são para a UI (feedback)
   isLoading: boolean;
   error: string | null;
-  updatePrices: (serverName: string) => Promise<void>;
+  // Esta é a função de "Importar"
+  updatePrices: (serverName: string) => Promise<PriceMap | null>;
+  // Esta é a função para carregar dados na mudança de servidor
+  loadPricesFromServer: (serverName: string) => PriceMap;
+  getApiTimestamp: (serverName: string) => string | null;
 }
 
 const PriceContext = createContext<PriceContextType | undefined>(undefined);
 
-const PRICE_STORAGE_KEY = 'nw_matrix_prices';
-const API_TIMESTAMP_KEY = 'nw_api_timestamp';
-const FETCH_THROTTLE_KEY = 'nw_fetch_timestamps';
+// --- Chaves do Storage ---
+// A CHAVE PAI que armazena { devaloka: {...}, aquarius: {...} }
+const PRICE_STORAGE_KEY = 'nw_matrix_prices_v2'; // v2 para aninhado
+const FETCH_THROTTLE_KEY = 'nw_fetch_timestamps'; // (Este continua global)
 
 // --- Funções Helper (sem alteração) ---
 function formatApiTimestamp(isoString: string): string {
   try {
     const date = new Date(isoString);
-    return date.toLocaleString('pt-BR', { /* ... (opções) ... */ });
+    return date.toLocaleString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    });
   } catch (e) { return "Data indisponível"; }
 }
 function isFetchThrottled(serverName: string): boolean {
@@ -51,49 +70,67 @@ function saveFetchTimestamp(serverName: string) {
   timestamps[serverName.toLowerCase()] = new Date().toISOString();
   localStorage.setItem(FETCH_THROTTLE_KEY, JSON.stringify(timestamps));
 }
+// --- FIM DOS HELPERS ---
+
 
 // --- O Provedor (Provider) ---
 export const PriceProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [prices, setPrices] = useState<Map<string, number>>(() => {
-    const storedPrices = localStorage.getItem(PRICE_STORAGE_KEY);
-    const initialPrices = storedPrices ? new Map(Object.entries(JSON.parse(storedPrices))) : new Map();
-    
-    defaultPrices.forEach((price, item) => {
-      if (!initialPrices.has(item)) {
-        initialPrices.set(item, price);
-      }
-    });
-    return initialPrices;
-  });
-  
-  const [apiTimestamp, setApiTimestamp] = useState<string | null>(() => {
-    return localStorage.getItem(API_TIMESTAMP_KEY) || null;
-  });
-
+  // O Contexto agora só gerencia o estado de UI (loading/error)
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // A função principal de atualização
-  const updatePrices = useCallback(async (serverName: string) => {
+  /**
+   * LÊ o objeto de storage aninhado
+   */
+  const getFullPriceStorage = (): PriceStorage => {
+    const stored = localStorage.getItem(PRICE_STORAGE_KEY);
+    return stored ? JSON.parse(stored) : {};
+  };
+
+  /**
+   * CARREGA os preços de um servidor específico do storage
+   */
+  const loadPricesFromServer = useCallback((serverName: string): PriceMap => {
+    const serverId = serverName.toLowerCase();
+    const storage = getFullPriceStorage();
+    
+    // Pega os dados do servidor (ex: storage.devaloka)
+    const serverData = storage[serverId];
+    const pricesMap = new Map<string, number>(defaultPrices); // Começa com os defaults
+
+    if (serverData) {
+      // Mescla os preços salvos com os defaults
+      const savedPrices = new Map(Object.entries(serverData.prices));
+      savedPrices.forEach((price, item) => {
+        pricesMap.set(item, price);
+      });
+    }
+    
+    return pricesMap;
+  }, []);
+
+  /**
+   * PEGA o timestamp de um servidor específico do storage
+   */
+  const getApiTimestamp = useCallback((serverName: string): string | null => {
+    const serverId = serverName.toLowerCase();
+    const storage = getFullPriceStorage();
+    return storage[serverId]?.timestamp || null;
+  }, []);
+
+
+  /**
+   * ATUALIZA (Fetch ou Load) os preços de um servidor
+   */
+  const updatePrices = useCallback(async (serverName: string): Promise<PriceMap | null> => {
     const serverId = serverName.toLowerCase();
     setError(null); 
 
     // 1. Verifica o Throttle de 24h
     if (isFetchThrottled(serverId)) {
-      const storedPrices = localStorage.getItem(PRICE_STORAGE_KEY);
-      const storedTimestamp = localStorage.getItem(API_TIMESTAMP_KEY);
-      
-      const newPrices = storedPrices ? new Map(Object.entries(JSON.parse(storedPrices))) : new Map();
-      
-      defaultPrices.forEach((price, item) => {
-        if (!newPrices.has(item)) {
-          newPrices.set(item, price);
-        }
-      });
-      
-      if (storedPrices) { setPrices(newPrices); }
-      if (storedTimestamp) { setApiTimestamp(storedTimestamp); }
-      return; 
+      console.log(`[PriceContext] Throttle ativo para ${serverId}. Carregando do storage.`);
+      // Carrega silenciosamente do storage (agora da chave correta)
+      return loadPricesFromServer(serverId);
     }
 
     // 2. Se NÃO estiver "throttled", faz o fetch
@@ -106,52 +143,50 @@ export const PriceProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       if (!data || data.length === 0) throw new Error("API não retornou dados.");
 
       // 3. Processa e Filtra os dados
-      
-      // --- CORREÇÃO DA LÓGICA DE CHAVE ---
       const minPrices = new Map<string, number>(defaultPrices);
-      
       for (const listing of data) {
         if (priceItemSet.has(listing.item_name)) {
           const ptKey = enToPtItemMap.get(listing.item_name); 
-          
           if (ptKey) {
             const price = listing.price / 100;
             const currentMin = minPrices.get(ptKey) || Infinity;
-
             if (price < currentMin) {
-              minPrices.set(ptKey, price); // <-- Sobrescreve o default (ex: 0) com o preço da API
+              minPrices.set(ptKey, price);
             }
           }
         }
       }
-      // --- FIM DA CORREÇÃO ---
 
       // 4. Formata o Timestamp da API
       const newApiTimestamp = formatApiTimestamp(data[0].timestamp);
       
-      // 5. Salva tudo no Estado e no LocalStorage
-      setPrices(minPrices); // <-- 'minPrices' agora tem chaves PT
-      setApiTimestamp(newApiTimestamp);
+      // 5. Salva no LocalStorage ANINHADO
+      const storage = getFullPriceStorage();
+      storage[serverId] = {
+        prices: Object.fromEntries(minPrices),
+        timestamp: newApiTimestamp,
+      };
+      localStorage.setItem(PRICE_STORAGE_KEY, JSON.stringify(storage));
       
-      // Salva no storage com chaves PT
-      localStorage.setItem(PRICE_STORAGE_KEY, JSON.stringify(Object.fromEntries(minPrices)));
-      localStorage.setItem(API_TIMESTAMP_KEY, newApiTimestamp);
-      saveFetchTimestamp(serverId); 
+      saveFetchTimestamp(serverId); // Salva o novo timestamp do throttle
+      
+      return minPrices; // Retorna o novo Map de preços
 
     } catch (e: any) {
       console.error(e);
       setError(e.message || "Falha ao buscar preços.");
+      return null;
     } finally {
       setIsLoading(false);
     }
-  }, []); // useCallback
+  }, [loadPricesFromServer]); // useCallback
 
   const value = {
-    prices,
-    apiTimestamp,
     isLoading,
     error,
     updatePrices,
+    loadPricesFromServer,
+    getApiTimestamp,
   };
 
   return (
